@@ -19,23 +19,47 @@ export let dom = {
 
         for(let board of boards){
             boardList += `
-                <li>${board.title}</li>
+            <div id="accordion">
+                <div class="card m-2">
+                    <div class="card-header justify-content-between" id="heading${board.id}">
+                        <h5 class="mb-0">
+                        <spa>${board.title}</spa>
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
+                            <div class="arrow-down" data-boardId="${board.id}"></div>
+                        </button>
+                        </h5>
+                    </div>
+                    <div id="collapse${board.id}" class="collapse" aria-labelledby="heading${board.id}" data-parent="#accordion">
+                        <div class="card-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
             `;
         }
 
         const outerHtml = `
-            <ul class="board-container">
+            <div class="board-container p-2">
                 ${boardList}
-            </ul>
+            </div>
         `;
 
         let boardsContainer = document.querySelector('#boards');
+        boardsContainer.innerHTML = "";
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
+        for(let board of boards) {
+            document.querySelector(`[data-boardId="${board.id}"]`).addEventListener("click", this.loadCards);
+        }
     },
-    loadCards: function (boardId) {
+    loadCards: function (e) {
         // retrieves cards and makes showCards called
+        console.log(dataHandler.getStatuses());
+        dom.showCards(dataHandler.getCardsByBoardId(e.target.dataset.board));
     },
     showCards: function (cards) {
+        for(let card of cards) {
+            console.log(card)
+        }
         // shows the cards of a board
         // it adds necessary event listeners also
     },
