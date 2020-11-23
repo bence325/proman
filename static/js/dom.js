@@ -18,26 +18,16 @@ export let dom = {
         let boardList = '';
 
         for(let board of boards){
-            ${board.id}
+
             boardList += `
-            <div id="accordion">
-                <div class="card m-2">
-                    <div class="card-header" id="heading${board.id}">
-                        <h5 class="mb-0 d-flex justify-content-between">
-                        <span>${board.title}</span>
-                        <span class="col">add new card</span>
-                        <span> </span>
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
-                            <div class="arrow-down" data-boardId="${board.id}"></div>
-                        </button>
-                        </h5>
-                    </div>
-                    <div id="collapse${board.id}" class="collapse" aria-labelledby="heading${board.id}" data-parent="#accordion">
-                        <div class="card-body">
-                        </div>
-                    </div>
-                </div>
+            <section class="board">
+            <div class="board-header"><span class="board-title">${board.title}</span>
+                <button class="board-add">Add Card</button>
+                <button class="board-toggle"><i class="fas fa-chevron-down" data-boardId="${board.id}"></i></button>
             </div>
+            <div class="board-columns">
+            </div>
+            </section>
             `;
         }
 
