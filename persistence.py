@@ -18,6 +18,7 @@ def _read_csv(file_name):
         formatted_data = []
         for row in rows:
             formatted_data.append(dict(row))
+        print(formatted_data)
         return formatted_data
 
 
@@ -31,6 +32,7 @@ def _get_data(data_type, file, force):
     """
     if force or data_type not in _cache:
         _cache[data_type] = _read_csv(file)
+    print(_cache)
     return _cache[data_type]
 
 
@@ -49,3 +51,4 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', CARDS_FILE, force)
+
