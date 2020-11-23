@@ -42,6 +42,7 @@ export let dataHandler = {
         // the status is retrieved and then the callback function is called with the status
     },
     getCardsByBoardId: function (boardId, callback) {
+        "/get-cards/<int:board_id>"
         // the cards are retrieved and then the callback function is called with the cards
     },
     getCard: function (cardId, callback) {
