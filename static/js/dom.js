@@ -25,7 +25,9 @@ export let dom = {
             <div class="board-header justify-content-between" id="heading${board.id}">
                 <span class="board-title">${board.title}</span>
                 <button class="board-add">Add Card</button>
-                <button class="data-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}"><i class="fas fa-chevron-down"></i></button>
+                <button class="data-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
             </section>
             `;
@@ -49,16 +51,21 @@ export let dom = {
             document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
         }
     },
-    loadCards: function (e) {
+    loadCards: function () {
         // retrieves cards and makes showCards called
-        console.log(e.target.parentNode.parentNode);
-        let boardBody = e.target.parentNode.parentNode.parentNode;
+        let boardBody = this.parentNode.parentNode;
         let boardColumns = boardBody.querySelector(".board-columns");
+        let arrow = boardBody.querySelector(".fas");
         if (!boardColumns) {
             dom.addStatusColumns(boardBody);
+            arrow.classList.remove("fa-chevron-down");
+            arrow.classList.add("fa-chevron-up");
         } else {
             boardColumns.remove();
+            arrow.classList.remove("fa-chevron-up");
+            arrow.classList.add("fa-chevron-down");
         }
+        // let cards = dataHandler.
         // dom.showCards(dataHandler.getCardsByBoardId(e.target.dataset.board));
     },
     showCards: function (cards) {
