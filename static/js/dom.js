@@ -53,6 +53,9 @@ export let dom = {
         let arrow = boardBody.querySelector(".fas");
         if (!boardColumns) {
             dom.addStatusColumns(boardBody);
+            dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
+                dom.showCards(boardBody, cards);
+            });
             arrow.classList.remove("fa-chevron-down");
             arrow.classList.add("fa-chevron-up");
         } else {
@@ -60,9 +63,6 @@ export let dom = {
             arrow.classList.remove("fa-chevron-up");
             arrow.classList.add("fa-chevron-down");
         }
-        dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
-            dom.showCards(boardBody, cards);
-        });
     },
     showCards: function (board, cards) {
         // shows the cards of a board
