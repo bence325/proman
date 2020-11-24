@@ -44,6 +44,7 @@ export let dom = {
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
         for(let board of boards) {
             document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
+            document.querySelector(".board-title").addEventListener("click", this.changeBoardTitle)
         }
     },
     loadCards: function () {
@@ -102,5 +103,14 @@ export let dom = {
             </div>
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
+    },
+    changeBoardTitle: function () {
+        console.log(this.parentNode);
+        let oldTitle = this.innerHTML;
+        let head = this.parentNode;
+        this.remove();
+        let input = document.createElement("input");
+        input.classList.add("board-title");
+        head.insertAdjacentElement('beforebegin', input);
     }
 };
