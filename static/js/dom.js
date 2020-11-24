@@ -50,8 +50,11 @@ export let dom = {
         for(let card of cards) {
             let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
             let newCard = "";
+            console.log(cards)
             newCard += `
-                <div class="card">
+                <div class="card" ondragstart="dataHandler.dragStartHandler()" 
+                                  ondragend="dataHandler.dragEndHandler()"
+                                  draggable="true">
                     <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
                     <div class="card-title" data-cardId="${card['id']}">${card['title']}</div>
                 </div>
@@ -68,7 +71,10 @@ export let dom = {
         let columnList = "";
         for(let column of dataHandler._data['statuses']) {
             columnList += `
-                <div class="board-column">
+                <div class="board-column" ondragenter="dataHandler.dropZoneEnterHandler()"
+                                          ondragleave="dataHandler.dropZoneLeaveHandler()"
+                                          ondragover="dataHandler.dropZoneOverHandler()"
+                                          ondrop="dataHandler.dropZoneDropHandler()">
                     <div class="board-column-title" data-status="${column['title']}">${column['title']}</div>
                     <div class="board-column-content">
                     </div>
