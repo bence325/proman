@@ -30,7 +30,18 @@ def _get_data_from_tables(cursor: RealDictCursor, table):
     return cursor.fetchall()
 
 
-def _get_data(data_type, table, force):
+@database_connection.connection_handler
+def write_data_to_boards(cursor: RealDictCursor, title):
+    query = """
+        INSERT INTO boards (title)
+        VALUES (%(title)s)
+        RETURNING id, title"""
+    params = {'title': title}
+    cursor.execute(query, params)
+    return cursor.fetchone()
+
+
+def _get_data(table, force):
     """
     Reads defined type of data from file or cache
     :param data_type: key where the data is stored in cache
@@ -38,9 +49,9 @@ def _get_data(data_type, table, force):
     :param force: if set to True, cache will be ignored
     :return: OrderedDict
     """
-    if force or data_type not in _cache:
-        _cache[data_type] = _get_data_from_tables(table)
-    return _cache[data_type]
+    if force or table not in _cache:
+        _cache[table] = _get_data_from_tables(table)
+    return _cache[table]
 
 
 def clear_cache():
@@ -49,13 +60,13 @@ def clear_cache():
 
 
 def get_statuses(force=False):
-    return _get_data('statuses', 'statuses', force)
+    return _get_data('statuses', force)
 
 
 def get_boards(force=False):
-    return _get_data('boards', 'boards', force)
+    return _get_data('boards', force)
 
 
 def get_cards(force=False):
-    return _get_data('cards', 'cards', force)
+    return _get_data('cards', force)
 
