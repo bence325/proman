@@ -1,5 +1,6 @@
 // It uses data_handler.js to visualize elements
-import { dataHandler } from "./data_handler.js";
+import {dataHandler} from "./data_handler.js";
+
 
 export let dom = {
     init: function () {
@@ -9,7 +10,7 @@ export let dom = {
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
-        dataHandler.getBoards(function(boards){
+        dataHandler.getBoards(function (boards) {
             dom.showBoards(boards);
         });
     },
@@ -21,7 +22,7 @@ export let dom = {
         let boardContainer = document.querySelector('#boards')
         boardContainer.classList.add('board-container', 'p-2')
 
-        for(let board of boards){
+        for (let board of boards) {
             this.appendNewBoard(board)
         }
     },
@@ -32,7 +33,7 @@ export let dom = {
         let arrow = boardBody.querySelector(".fas");
         if (!boardColumns) {
             dom.addStatusColumns(boardBody);
-            dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
+            dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards) {
                 if (cards) {
                     dom.showCards(boardBody, cards);
                 }
@@ -48,7 +49,7 @@ export let dom = {
     showCards: function (board, cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
-        for(let card of cards) {
+        for (let card of cards) {
             let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
             let newCard = "";
             newCard += `
@@ -62,13 +63,13 @@ export let dom = {
         dom.addEventListenerToCards();
     },
     // here comes more features
-    loadStatuses: function (){
+    loadStatuses: function () {
         dataHandler.getStatuses(function (statuses) {
         });
     },
     addStatusColumns: function (boardBody) {
         let columnList = "";
-        for(let column of dataHandler._data['statuses']) {
+        for (let column of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
                     <div class="board-column-title">${column['title']}</div>
@@ -83,6 +84,7 @@ export let dom = {
             </div>
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
+        dom.addEventListenerToContainer();
     },
     addNewBoardEventListener: function () {
         document.querySelector("#newBoard").addEventListener("click", this.newBoardTitle);
@@ -110,7 +112,7 @@ export let dom = {
                     <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
                 `;
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
-                dom.addNewBoardEvenetListener();
+                dom.addEventListenerToCards();
             })
         })
     },
@@ -133,5 +135,70 @@ export let dom = {
             `;
         container.insertAdjacentHTML("beforeend", boardList);
         document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
+    },
+    addEventListenerToCards: function () {
+        let cards = document.querySelectorAll('.card');
+        for (let card of cards) {
+            card.addEventListener('dragstart', dom.dragStartHandler)
+            card.addEventListener('dragend', dom.dragEndHandler)
+        }
+    },
+    addEventListenerToContainer: function () {
+        let containers = document.querySelectorAll('.board-column')
+        for (let container of containers) {
+            container.addEventListener("dragenter", dom.dropZoneEnterHandler);
+            container.addEventListener("dragleave", dom.dropZoneLeaveHandler);
+            container.addEventListener("dragover", dom.dropZoneOverHandler);
+            container.addEventListener("drop", dom.dropZoneDropHandler);
+        }
+    },
+    dragStartHandler: function (e) {
+        dom.setDropZonesHighlight();
+        this.classList.add('dragged', 'drag-feedback');
+        e.dataTransfer.setData('type/dragged-box', 'dragged')
+    },
+    dragEndHandler: function () {
+        dom.setDropZonesHighlight(false)
+        this.classList.remove('dragged');
+        this.classList.remove('drag-feedback');
+    },
+    dropZoneEnterHandler: function (e) {
+        if (e.dataTransfer.types.includes('type/dragged-box')) {
+            this.classList.add("over-zone");
+            e.preventDefault();
+        }
+    },
+    dropZoneLeaveHandler: function (e) {
+        if (e.dataTransfer.types.includes('type/dragged-box') &&
+            e.relatedTarget !== null &&
+            e.currentTarget !== e.relatedTarget.closest('.bord-column')) {
+            this.classList.remove("over-zone");
+        }
+    },
+    dropZoneOverHandler: function (e) {
+        e.preventDefault()
+        // if (e.dataTransfer.types.includes('type/dragged-box')) {
+        //     e.preventDefault();
+        // }
+    },
+    dropZoneDropHandler: function (e) {
+        e.preventDefault();
+        let draggedElement = document.querySelector('.dragged');
+        if (e.target.classList.contains('active-zone')) {
+            e.target.appendChild(draggedElement);
+        }
+        // here comes more features
+    },
+    setDropZonesHighlight: function (highlight = true) {
+    const dropZones = document.querySelectorAll(".board-column");
+    console.log(dropZones)
+    for (const dropZone of dropZones) {
+        if (highlight) {
+            dropZone.classList.add("active-zone");
+        } else {
+            dropZone.classList.remove("active-zone");
+            dropZone.classList.remove("over-zone");
+        }
     }
+}
 };
