@@ -5,7 +5,7 @@ export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
         this.loadStatuses();
-        this.addNewBoardEventListener();
+        this.addNewBoardEventListener(document.querySelector("#newBoard"));
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -83,8 +83,8 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
     },
-    addNewBoardEventListener: function () {
-        document.querySelector("#newBoard").addEventListener("click", this.createNewBoard);
+    addNewBoardEventListener: function (addNewBoarButton) {
+        addNewBoarButton.addEventListener("click", this.createNewBoard);
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");
@@ -109,7 +109,7 @@ export let dom = {
                     <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
                 `;
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
-                dom.addNewBoardEvenetListener();
+                dom.addNewBoardEventListener(document.querySelector("#newBoard"));
             })
         })
     },
