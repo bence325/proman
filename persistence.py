@@ -26,6 +26,16 @@ def write_data_to_boards(cursor: RealDictCursor, title):
     return cursor.fetchone()
 
 
+@database_connection.connection_handler
+def change_board_title(cursor: RealDictCursor, board_id, new_title):
+    print(board_id, new_title)
+    cursor.execute(
+        sql.SQL("UPDATE boards SET title = {new_title} WHERE id = {id}").
+            format(id=sql.Literal(board_id), new_title=sql.Literal(new_title))
+    )
+    return "ok"
+
+
 def _get_data(table, force):
     """
     Reads defined type of data from file or cache
@@ -54,4 +64,3 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', force)
-

@@ -87,9 +87,9 @@ export let dom = {
         dom.addEventListenerToContainer();
     },
     addNewBoardEventListener: function () {
-        document.querySelector("#newBoard").addEventListener("click", this.newBoardTitle);
+        document.querySelector("#newBoard").addEventListener("click", this.createNewBoard);
     },
-    newBoardTitle: function (e) {
+    createNewBoard: function (e) {
         let header = document.querySelector("#header");
         if (e.target.localName === "button") {
             e.target.remove();
@@ -100,7 +100,7 @@ export let dom = {
         <div id="addNewBoard" class="board-toggle">
             <label for="board_title">Board title</label>
             <input type="text" id="board_title" name="board_title">
-            <button type="submit" id="newBoardSubmit">Add</button>
+            <button type="submit" id="newBoardSubmit">Save</button>
         </div>
         `;
         header.insertAdjacentHTML('beforeend', submit);
@@ -203,5 +203,30 @@ export let dom = {
                 dropZone.classList.remove("over-zone");
             }
         }
+        document.querySelector(`#board-${board.id}`).lastElementChild.firstElementChild.addEventListener("click", this.changeBoardTitle);
+    },
+    changeBoardTitle: function () {
+        let boardId = this.parentNode.parentNode.id.split("-")[1];
+        let oldTitle = this.innerHTML;
+        let head = this.parentNode;
+        this.remove();
+        let submit = `
+            <div id="addNewBoardTitle" class="board-title">
+                <label for="board_title"></label>
+                <input type="text" id="board_title" name="board_title" placeholder="${oldTitle}">
+                <button type="submit" id="newTitleSubmit">Save</button>
+            </div>
+            `;
+        head.insertAdjacentHTML('afterbegin', submit);
+        document.querySelector('#newTitleSubmit').addEventListener('click', (e) => {
+            let newTitle = dom.getNewBoard();
+            dataHandler.changeBoardTitle(boardId, newTitle, (response) => {
+                let newBoardTitle = `
+                    <span class="board-title">${newTitle['title']}</span>
+                `;
+                document.querySelector("#addNewBoardTitle").remove();
+                document.querySelector(`#heading${boardId}`).insertAdjacentHTML('beforebegin', newBoardTitle);
+            });
+        })
     }
 };

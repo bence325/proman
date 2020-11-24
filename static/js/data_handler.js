@@ -79,4 +79,11 @@ export let dataHandler = {
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
     },
+    // here comes more features
+    changeBoardTitle:function (boardId, boardTitle, callback) {
+        this._api_post(`/change-board-title/${boardId}`, boardTitle, (response) => {
+            // this._data['boards'] = response;
+            callback(response)
+        });
+    }
 };

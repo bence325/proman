@@ -46,6 +46,13 @@ def write_new_board():
     return data_handler.write_new_board(req['title'])
 
 
+@app.route("/change-board-title/<int:board_id>", methods=['POST', 'GET'])
+@json_response
+def change_board_title(board_id):
+    req = request.get_json()
+    return data_handler.change_board_title(board_id, req["title"])
+
+
 def main():
     app.run(debug=True)
 
