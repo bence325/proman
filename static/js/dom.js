@@ -63,14 +63,12 @@ export let dom = {
         dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
             dom.showCards(boardBody, cards);
         });
-        // dom.showCards(dataHandler.getCardsByBoardId(e.target.dataset.board));
     },
     showCards: function (board, cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
         for(let card of cards) {
             let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
-            console.log(card);
             let newCard = "";
             newCard += `
                 <div class="card">
