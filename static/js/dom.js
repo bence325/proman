@@ -155,7 +155,7 @@ export let dom = {
     dragStartHandler: function (e) {
         dom.setDropZonesHighlight();
         this.classList.add('dragged', 'drag-feedback');
-        e.dataTransfer.setData('type/dragged-box', 'dragged')
+        e.dataTransfer.setData('type/dragged-box', 'dragged');
     },
     dragEndHandler: function () {
         dom.setDropZonesHighlight(false)
@@ -171,7 +171,7 @@ export let dom = {
     dropZoneLeaveHandler: function (e) {
         if (e.dataTransfer.types.includes('type/dragged-box') &&
             e.relatedTarget !== null &&
-            e.currentTarget !== e.relatedTarget.closest('.bord-column')) {
+            e.currentTarget !== e.relatedTarget.closest('.bord-column-content')) {
             this.classList.remove("over-zone");
         }
     },
@@ -185,20 +185,23 @@ export let dom = {
         e.preventDefault();
         let draggedElement = document.querySelector('.dragged');
         if (e.target.classList.contains('active-zone')) {
-            e.target.appendChild(draggedElement);
+            let dropZone = e.target.querySelector('.board-column-content')
+            dropZone.appendChild(draggedElement);
+        }
+        if (e.target.classList.contains('board-column-content')) {
+            e.target.appendChild(draggedElement)
         }
         // here comes more features
     },
     setDropZonesHighlight: function (highlight = true) {
-    const dropZones = document.querySelectorAll(".board-column");
-    console.log(dropZones)
-    for (const dropZone of dropZones) {
-        if (highlight) {
-            dropZone.classList.add("active-zone");
-        } else {
-            dropZone.classList.remove("active-zone");
-            dropZone.classList.remove("over-zone");
+        const dropZones = document.querySelectorAll(".board-column");
+        for (const dropZone of dropZones) {
+            if (highlight) {
+                dropZone.classList.add("active-zone");
+            } else {
+                dropZone.classList.remove("active-zone");
+                dropZone.classList.remove("over-zone");
+            }
         }
     }
-}
 };
