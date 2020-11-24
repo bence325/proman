@@ -54,7 +54,9 @@ export let dom = {
         if (!boardColumns) {
             dom.addStatusColumns(boardBody);
             dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
-                dom.showCards(boardBody, cards);
+                if (cards) {
+                    dom.showCards(boardBody, cards);
+                }
             });
             arrow.classList.remove("fa-chevron-down");
             arrow.classList.add("fa-chevron-up");
@@ -94,7 +96,7 @@ export let dom = {
                     </div>
                 </div>
                 `;
-        };
+        }
         let boardId = boardBody.id;
         const outHtml = `
             <div class="board-columns" id="collapse${boardId}" class="collapse" aria-labelledby="heading${boardId}" data-parent="board-#${boardId}">
@@ -105,11 +107,28 @@ export let dom = {
     },
     addClick: function () {
         document.querySelector('#new_submit').addEventListener('click', () => {
-            dataHandler.createNewBoard(dom.getNewBoard(), this.loadBoards())
+            dataHandler.createNewBoard(dom.getNewBoard(), (board) =>this.appendNewBoard(board))
         })
     },
     getNewBoard: function () {
         const title = document.querySelector('#board_title').value;
         return {title}
     },
+    appendNewBoard: function (board) {
+        const container = document.querySelector('.board-container')
+        let boardList = `
+            <section class="board" id="board-${board.id}">
+            <div class="board-header justify-content-between" id="heading${board.id}">
+                <span class="board-title">${board.title}</span>
+                <button class="board-add">Add Card</button>
+                <button class="data-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            </section>
+            `;
+        container.insertAdjacentHTML("beforeend", boardList);
+        document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
+
+    }
 };

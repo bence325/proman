@@ -35,7 +35,7 @@ def write_data_to_boards(cursor: RealDictCursor, title):
     query = """
         INSERT INTO boards (title)
         VALUES (%(title)s)
-        RETURNING id"""
+        RETURNING id, title"""
     params = {'title': title}
     cursor.execute(query, params)
     return cursor.fetchone()
