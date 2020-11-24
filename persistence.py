@@ -43,7 +43,6 @@ def write_data_to_boards(cursor: RealDictCursor, title):
 
 @database_connection.connection_handler
 def change_board_title(cursor: RealDictCursor, board_id, new_title):
-    print(board_id, new_title)
     cursor.execute(
         sql.SQL("UPDATE boards SET title = {new_title} WHERE id = {id}").
             format(id=sql.Literal(board_id), new_title=sql.Literal(new_title))

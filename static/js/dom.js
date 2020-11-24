@@ -154,7 +154,9 @@ export let dom = {
                     <span class="board-title">${newTitle['title']}</span>
                 `;
                 document.querySelector("#addNewBoardTitle").remove();
-                document.querySelector(`#heading${boardId}`).insertAdjacentHTML('beforebegin', newBoardTitle);
+                document.querySelector(`#heading${boardId}`).insertAdjacentHTML('afterbegin', newBoardTitle);
+                document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild.addEventListener("click", dom.changeBoardTitle);
+                console.log(document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild);
             });
         })
     }
