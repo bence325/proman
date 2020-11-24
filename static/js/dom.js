@@ -97,7 +97,7 @@ export let dom = {
         <div id="addNewBoard" class="board-toggle">
             <label for="board_title">Board title</label>
             <input type="text" id="board_title" name="board_title">
-            <button type="submit" id="newBoardSubmit">Add</button>
+            <button type="submit" id="newBoardSubmit">Save</button>
         </div>
         `;
         header.insertAdjacentHTML('beforeend', submit);
@@ -143,7 +143,7 @@ export let dom = {
             <div id="addNewBoardTitle" class="board-title">
                 <label for="board_title"></label>
                 <input type="text" id="board_title" name="board_title" placeholder="${oldTitle}">
-                <button type="submit" id="newTitleSubmit">Add</button>
+                <button type="submit" id="newTitleSubmit">Save</button>
             </div>
             `;
         head.insertAdjacentHTML('afterbegin', submit);
