@@ -20,8 +20,8 @@ export let dataHandler = {
         // it is not called from outside
         // sends the data to the API, and calls callback function
     },
-    init: function () {
-    },
+    init: function () {}
+    ,
     getBoards: function (callback) {
         // the boards are retrieved and then the callback function is called with the boards
 
@@ -37,11 +37,19 @@ export let dataHandler = {
     },
     getStatuses: function (callback) {
         // the statuses are retrieved and then the callback function is called with the statuses
+         this._api_get('/get-statuses', (response) => {
+             this._data['statuses'] = response;
+            callback(response);
+        });
     },
     getStatus: function (statusId, callback) {
         // the status is retrieved and then the callback function is called with the status
     },
     getCardsByBoardId: function (boardId, callback) {
+        this._api_get(`/get-cards/${boardId}`, (response) => {
+             this._data['cards'] = response;
+            callback(response);
+        });
         // the cards are retrieved and then the callback function is called with the cards
     },
     getCard: function (cardId, callback) {
