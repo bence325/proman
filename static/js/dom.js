@@ -5,7 +5,7 @@ export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
         this.loadStatuses();
-        this.addNewBoardEvenetListener();
+        this.addNewBoardEventListener();
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
