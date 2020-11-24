@@ -22,9 +22,15 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
         <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
     </head>
-    <body class="p-5">
+    <body>
+
+    <div id="header">
         <h1>ProMan</h1>
-        <div id="boards">Boards are loading...</div>
+        <div> </div>
+        <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
+    </div>
+
+    <div id="boards">Boards are loading...</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

@@ -32,3 +32,6 @@ def get_cards_for_board(board_id):
 
 def get_statuses():
     return persistence.get_statuses(force=True)
+
+def write_new_board(title):
+    return persistence.write_data_to_boards(title)
