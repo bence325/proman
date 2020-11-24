@@ -109,8 +109,13 @@ export let dom = {
         let oldTitle = this.innerHTML;
         let head = this.parentNode;
         this.remove();
-        let input = document.createElement("input");
-        input.classList.add("board-title");
-        head.insertAdjacentElement('beforebegin', input);
+        let submit = `
+            <div id="addNewBoardTitle">
+                <label for="board_title"></label>
+                <input type="text" id="board_title" name="board_title" placeholder="${oldTitle}">
+                <button type="submit" id="newBoardTitleSubmit">Add</button>
+            </div>
+            `;
+        head.insertAdjacentHTML('afterbegin', submit);
     }
 };
