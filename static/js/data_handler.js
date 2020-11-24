@@ -75,7 +75,6 @@ export let dataHandler = {
         this._api_post('/write-new-board', boardTitle, (response) => {
             this._data['boards'] = response;
             callback(response)
-            console.log(response)
         });
     },
     createNewCard: function (cardTitle, boardId, statusId, callback) {

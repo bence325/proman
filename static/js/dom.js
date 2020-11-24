@@ -15,35 +15,13 @@ export let dom = {
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
-
-        let boardList = '';
-
-        for(let board of boards){
-
-            boardList += `
-            <section class="board" id="board-${board.id}">
-            <div class="board-header justify-content-between" id="heading${board.id}">
-                <span class="board-title">${board.title}</span>
-                <button class="board-add">Add Card</button>
-                <button class="data-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-            </div>
-            </section>
-            `;
-        }
-
-        const outerHtml = `
-            <div class="board-container p-2">
-                ${boardList}
-            </div>
-        `;
-
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.innerHTML = "";
-        boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
-        for(let board of boards) {
-            document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
+        let boardContainer = document.querySelector('div')
+        boardContainer.classList.add('board-container', 'p-2')
+
+        for(let board of boards){
+            this.appendNewBoard(board)
         }
     },
     loadCards: function () {
