@@ -84,32 +84,32 @@ export let dom = {
         boardBody.insertAdjacentHTML('beforeend', outHtml);
     },
     addNewBoardEvenetListener: function () {
-        document.querySelector("#newBoard").addEventListener("click", (e) => {
-            // let button = "";
-            let header = document.querySelector("#header");
-            if (e.target.localName === "button") {
-                e.target.remove();
-            } else {
-                e.target.parentNode.remove();
-            }
-            // button.remove();
-            let submit = `
-            <div id="addNewBoard" class="board-toggle">
-                <label for="board_title">Board title</label>
-                <input type="text" id="board_title" name="board_title">
-                <button type="submit" id="newBoardSubmit">Add</button>
-            </div>
-            `;
-            header.insertAdjacentHTML('beforeend', submit);
-            document.querySelector('#newBoardSubmit').addEventListener('click', () => {
-                dataHandler.createNewBoard(dom.getNewBoard(), (board) => {
-                    this.appendNewBoard(board);
-                    document.querySelector("#addNewBoard").remove();
-                    let addNewBoardButton = `
-                        <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
-                    `;
-                    header.insertAdjacentHTML("beforeend", addNewBoardButton);
-                })
+        document.querySelector("#newBoard").addEventListener("click", this.newBoardTitle);
+    },
+    newBoardTitle: function (e) {
+        let header = document.querySelector("#header");
+        if (e.target.localName === "button") {
+            e.target.remove();
+        } else {
+            e.target.parentNode.remove();
+        }
+        let submit = `
+        <div id="addNewBoard" class="board-toggle">
+            <label for="board_title">Board title</label>
+            <input type="text" id="board_title" name="board_title">
+            <button type="submit" id="newBoardSubmit">Add</button>
+        </div>
+        `;
+        header.insertAdjacentHTML('beforeend', submit);
+        document.querySelector('#newBoardSubmit').addEventListener('click', () => {
+            dataHandler.createNewBoard(dom.getNewBoard(), (board) => {
+                dom.appendNewBoard(board);
+                document.querySelector("#addNewBoard").remove();
+                let addNewBoardButton = `
+                    <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
+                `;
+                header.insertAdjacentHTML("beforeend", addNewBoardButton);
+                dom.addNewBoardEvenetListener();
             })
         })
     },
