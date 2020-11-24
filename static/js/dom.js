@@ -42,11 +42,6 @@ export let dom = {
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.innerHTML = "";
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
-        // let boardBodies = document.querySelectorAll("section");
-        // console.log("1", boardBodies);
-        // for(let boardBody of boardBodies){
-        //     this.addStatusColumns(boardBody);
-        // };
         for(let board of boards) {
             document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
         }
@@ -65,15 +60,26 @@ export let dom = {
             arrow.classList.remove("fa-chevron-up");
             arrow.classList.add("fa-chevron-down");
         }
-        // let cards = dataHandler.
+        dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
+            dom.showCards(boardBody, cards);
+        });
         // dom.showCards(dataHandler.getCardsByBoardId(e.target.dataset.board));
     },
-    showCards: function (cards) {
-        for(let card of cards) {
-            console.log(card)
-        }
+    showCards: function (board, cards) {
         // shows the cards of a board
         // it adds necessary event listeners also
+        for(let card of cards) {
+            let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
+            console.log(card);
+            let newCard = "";
+            newCard += `
+                <div class="card">
+                    <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                    <div class="card-title" data-cardId="${card['id']}">${card['title']}</div>
+                </div>
+                `;
+            column.insertAdjacentHTML('beforeend', newCard);
+        }
     },
     // here comes more features
     loadStatuses: function (){
@@ -85,12 +91,8 @@ export let dom = {
         for(let column of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
-                    <div class="board-column-title" data-statusId="${column['id']}">${column['title']}</div>
+                    <div class="board-column-title" data-status="${column['title']}">${column['title']}</div>
                     <div class="board-column-content">
-<!--                        <div class="card">-->
-<!--                            <div class="card-remove"><i class="fas fa-trash-alt"></i></div>-->
-<!--                            <div class="card-title">Card 1</div>-->
-<!--                        </div>-->
                     </div>
                 </div>
                 `;
