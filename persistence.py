@@ -50,6 +50,23 @@ def change_board_title(cursor: RealDictCursor, board_id, new_title):
     return "ok"
 
 
+@database_connection.connection_handler
+def get_statuses_to_board(cursor: RealDictCursor, board_id):
+    cursor.execute(
+        sql.SQL("SELECT statuses FROM boards WHERE id = {id}").
+            format(id=sql.Literal(board_id))
+    )
+    status_ids = cursor.fetchone()
+    result = []
+    for item in status_ids['statuses']:
+        cursor.execute(
+            sql.SQL("SELECT title FROM statuses WHERE id = {id}").
+                format(id=sql.Literal(item))
+        )
+        result.append(cursor.fetchone()['title'])
+    return result
+
+
 def _get_data(table, force):
     """
     Reads defined type of data from file or cache

@@ -33,10 +33,10 @@ def get_cards_for_board(board_id: int):
     return data_handler.get_cards_for_board(board_id)
 
 
-@app.route("/get-statuses")
+@app.route("/get-statuses-to-board/<int:board_id>")
 @json_response
-def get_statuses():
-    return data_handler.get_statuses()
+def get_statuses_to_board(board_id):
+    return data_handler.get_statuses_to_board(board_id)
 
 
 @app.route("/write-new-board", methods=['POST', 'GET'])

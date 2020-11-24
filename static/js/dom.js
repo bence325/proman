@@ -4,7 +4,7 @@ import { dataHandler } from "./data_handler.js";
 export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
-        this.loadStatuses();
+        // this.loadStatuses();
         this.addNewBoardEventListener(document.querySelector("#newBoard"));
     },
     loadBoards: function () {
@@ -28,10 +28,11 @@ export let dom = {
     loadCards: function () {
         // retrieves cards and makes showCards called
         let boardBody = this.parentNode.parentNode;
+        let boardId = boardBody.id.split("-")[1];
         let boardColumns = boardBody.querySelector(".board-columns");
         let arrow = boardBody.querySelector(".fas");
         if (!boardColumns) {
-            dom.addStatusColumns(boardBody);
+            dom.loadStatusesToBoard(boardBody, boardId);
             dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
                 if (cards) {
                     dom.showCards(boardBody, cards);
@@ -61,21 +62,21 @@ export let dom = {
         }
     },
     // here comes more features
-    loadStatuses: function (){
-        dataHandler.getStatuses(function (statuses) {
+    loadStatusesToBoard: function (boardBody, boardId){
+        dataHandler.getStatusesToBoard(boardId, function (statuses) {
+            dom.addStatusColumns(boardBody, boardId);
         });
     },
-    addStatusColumns: function (boardBody) {
+    addStatusColumns: function (boardBody, boardId) {
         let columnList = "";
-        for(let column of dataHandler._data['statuses']) {
+        for(let columnName of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
-                    <div class="board-column-title">${column['title']}</div>
-                    <div class="board-column-content" data-status="${column['title']}"></div>
+                    <div class="board-column-title">${columnName}</div>
+                    <div class="board-column-content" data-status="${columnName}"></div>
                 </div>
                 `;
         }
-        let boardId = boardBody.id;
         const outHtml = `
             <div class="board-columns" id="collapse${boardId}" class="collapse" aria-labelledby="heading${boardId}" data-parent="board-#${boardId}">
                 ${columnList}
@@ -106,7 +107,7 @@ export let dom = {
                 dom.appendNewBoard(board);
                 document.querySelector("#addNewBoard").remove();
                 let addNewBoardButton = `
-                    <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
+                    <button id="newBoard" class="board-toggle data-toggle">Add Board  <i class="fas fa-plus"></i></button>
                 `;
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
                 dom.addNewBoardEventListener(document.querySelector("#newBoard"));
@@ -122,11 +123,12 @@ export let dom = {
         let boardList = `
             <section class="board" id="board-${board.id}">
             <div class="board-header" id="heading${board.id}">
-                <span class="board-title">${board.title}</span>
+                <span class="board-title">${board.title}</span> 
+                <button class="board-add">Add Card  <i class="fas fa-plus"></i></button> 
+                <button class="board-add">Add Column  <i class="fas fa-plus"></i></button> 
                 <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
                     <i class="fas fa-chevron-down"></i>
                 </button>
-                <button class="board-add board-toggle">Add Card</button>
             </div>
             </section>
             `;
