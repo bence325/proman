@@ -83,7 +83,7 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
     },
-    addNewBoardEvenetListener: function () {
+    addNewBoardEventListener: function () {
         document.querySelector("#newBoard").addEventListener("click", this.newBoardTitle);
     },
     newBoardTitle: function (e) {
@@ -132,6 +132,5 @@ export let dom = {
             `;
         container.insertAdjacentHTML("beforeend", boardList);
         document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
-
     }
 };
