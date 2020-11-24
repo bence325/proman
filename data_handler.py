@@ -33,5 +33,10 @@ def get_cards_for_board(board_id):
 def get_statuses():
     return persistence.get_statuses(force=True)
 
+
 def write_new_board(title):
     return persistence.write_data_to_boards(title)
+
+
+def change_board_title(board_id, new_title):
+    return persistence.change_board_title(board_id, new_title)

@@ -64,6 +64,7 @@ section.board{
     margin: 13px;
     display: inline-block;
     font-size: 20px;
+    float: left;
 }
 .board-title, .board-add, .board-toggle{
     display: inline-block;
