@@ -80,40 +80,4 @@ export let dataHandler = {
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
     },
-    dragStartHandler: function (e) {
-        // setDropZonesHighlight();
-        this.classList.add('dragged', 'drag-feedback');
-        e.dataTransfer.setData('type/dragged-box', 'dragged')
-    },
-    dragEndHandler: function () {
-        // setDropZonesHighlight(false)
-        this.classList.remove('dragged');
-    },
-    dropZoneEnterHandler: function (e) {
-        if (e.dataTransfer.types.includes('type/dragged-box')) {
-            this.classList.add("over-zone");
-            e.preventDefault();
-        }
-    },
-    dropZoneLeaveHandler: function (e) {
-        if (e.dataTransfer.types.includes('type/dragged-box') &&
-            e.relatedTarget !== null &&
-            e.currentTarget !== e.relatedTarget.closest('.card-slot:empty')) {
-            this.classList.remove("over-zone");
-        }
-    },
-    dropZoneOverHandler: function (e) {
-        e.preventDefault()
-        // if (e.dataTransfer.types.includes('type/dragged-box')) {
-        //     e.preventDefault();
-        // }
-    },
-    dropZoneDropHandler: function (e) {
-        e.preventDefault();
-        let draggedElement = document.querySelector('.dragged');
-        if (e.target.classList.contains('active-zone') || e.target.classList.contains('mixed-cards')) {
-            e.target.appendChild(draggedElement);
-        }
-        // here comes more features
-    }
 };

@@ -50,17 +50,15 @@ export let dom = {
         for(let card of cards) {
             let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
             let newCard = "";
-            console.log(cards)
             newCard += `
-                <div class="card" ondragstart="dataHandler.dragStartHandler()" 
-                                  ondragend="dataHandler.dragEndHandler()"
-                                  draggable="true">
+                <div class="card" draggable="true">
                     <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
                     <div class="card-title" data-cardId="${card['id']}">${card['title']}</div>
                 </div>
                 `;
             column.insertAdjacentHTML('beforeend', newCard);
         }
+        dom.addEventListenerToCards();
     },
     // here comes more features
     loadStatuses: function (){
@@ -71,10 +69,7 @@ export let dom = {
         let columnList = "";
         for(let column of dataHandler._data['statuses']) {
             columnList += `
-                <div class="board-column" ondragenter="dataHandler.dropZoneEnterHandler()"
-                                          ondragleave="dataHandler.dropZoneLeaveHandler()"
-                                          ondragover="dataHandler.dropZoneOverHandler()"
-                                          ondrop="dataHandler.dropZoneDropHandler()">
+                <div class="board-column">
                     <div class="board-column-title" data-status="${column['title']}">${column['title']}</div>
                     <div class="board-column-content">
                     </div>
@@ -114,5 +109,48 @@ export let dom = {
         container.insertAdjacentHTML("beforeend", boardList);
         document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
 
+    },
+    dragStartHandler: function (e) {
+        // setDropZonesHighlight();
+        this.classList.add('dragged', 'drag-feedback');
+        e.dataTransfer.setData('type/dragged-box', 'dragged')
+    },
+    dragEndHandler: function () {
+        // setDropZonesHighlight(false)
+        this.classList.remove('dragged');
+    },
+    dropZoneEnterHandler: function (e) {
+        if (e.dataTransfer.types.includes('type/dragged-box')) {
+            this.classList.add("over-zone");
+            e.preventDefault();
+        }
+    },
+    dropZoneLeaveHandler: function (e) {
+        if (e.dataTransfer.types.includes('type/dragged-box') &&
+            e.relatedTarget !== null &&
+            e.currentTarget !== e.relatedTarget.closest('.card-slot:empty')) {
+            this.classList.remove("over-zone");
+        }
+    },
+    dropZoneOverHandler: function (e) {
+        e.preventDefault()
+        // if (e.dataTransfer.types.includes('type/dragged-box')) {
+        //     e.preventDefault();
+        // }
+    },
+    dropZoneDropHandler: function (e) {
+        e.preventDefault();
+        let draggedElement = document.querySelector('.dragged');
+        if (e.target.classList.contains('active-zone') || e.target.classList.contains('mixed-cards')) {
+            e.target.appendChild(draggedElement);
+        }
+        // here comes more features
+    },
+    addEventListenerToCards: function () {
+        let cards = document.querySelectorAll('.card')
+        for (let card of cards) {
+            card.addEventListener('dragstart', dom.dragStartHandler)
+            card.addEventListener('dragend', dom.dragEndHandler)
+        }
     }
 };
