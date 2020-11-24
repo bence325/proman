@@ -5,6 +5,7 @@ export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
         this.loadStatuses();
+        this.addNewBoardEvenetListener();
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -17,7 +18,7 @@ export let dom = {
         // it adds necessary event listeners also
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.innerHTML = "";
-        let boardContainer = document.querySelector('div')
+        let boardContainer = document.querySelector('#boards')
         boardContainer.classList.add('board-container', 'p-2')
 
         for(let board of boards){
@@ -69,9 +70,8 @@ export let dom = {
         for(let column of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
-                    <div class="board-column-title" data-status="${column['title']}">${column['title']}</div>
-                    <div class="board-column-content">
-                    </div>
+                    <div class="board-column-title">${column['title']}</div>
+                    <div class="board-column-content" data-status="${column['title']}"></div>
                 </div>
                 `;
         }
@@ -83,9 +83,34 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
     },
-    addClick: function () {
-        document.querySelector('#new_submit').addEventListener('click', () => {
-            dataHandler.createNewBoard(dom.getNewBoard(), (board) =>this.appendNewBoard(board))
+    addNewBoardEvenetListener: function () {
+        document.querySelector("#newBoard").addEventListener("click", (e) => {
+            // let button = "";
+            let header = document.querySelector("#header");
+            if (e.target.localName === "button") {
+                e.target.remove();
+            } else {
+                e.target.parentNode.remove();
+            }
+            // button.remove();
+            let submit = `
+            <div id="addNewBoard" class="board-toggle">
+                <label for="board_title">Board title</label>
+                <input type="text" id="board_title" name="board_title">
+                <button type="submit" id="newBoardSubmit">Add</button>
+            </div>
+            `;
+            header.insertAdjacentHTML('beforeend', submit);
+            document.querySelector('#newBoardSubmit').addEventListener('click', () => {
+                dataHandler.createNewBoard(dom.getNewBoard(), (board) => {
+                    this.appendNewBoard(board);
+                    document.querySelector("#addNewBoard").remove();
+                    let addNewBoardButton = `
+                        <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
+                    `;
+                    header.insertAdjacentHTML("beforeend", addNewBoardButton);
+                })
+            })
         })
     },
     getNewBoard: function () {
@@ -93,15 +118,15 @@ export let dom = {
         return {title}
     },
     appendNewBoard: function (board) {
-        const container = document.querySelector('.board-container')
+        const container = document.querySelector('.board-container');
         let boardList = `
             <section class="board" id="board-${board.id}">
-            <div class="board-header justify-content-between" id="heading${board.id}">
+            <div class="board-header" id="heading${board.id}">
                 <span class="board-title">${board.title}</span>
-                <button class="board-add">Add Card</button>
-                <button class="data-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
+                <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
                     <i class="fas fa-chevron-down"></i>
                 </button>
+                <button class="board-add board-toggle">Add Card</button>
             </div>
             </section>
             `;
