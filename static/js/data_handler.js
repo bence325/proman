@@ -13,12 +13,28 @@ export let dataHandler = {
             method: 'GET',
             credentials: 'same-origin'
         })
-        .then(response => response.json())  // parse the response as JSON
-        .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+            .then(response => response.json())  // parse the response as JSON
+            .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
     _api_post: function (url, data, callback) {
         // it is not called from outside
         // sends the data to the API, and calls callback function
+        fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8'
+            })
+        })
+            .then(response => response.json())
+            .then(json_response => {
+                callback(json_response)
+            })
+            .catch((error) => {
+                console.log("Fetch error: " + error);
+            });
+
     },
     init: function () {
     },
@@ -49,6 +65,10 @@ export let dataHandler = {
     },
     createNewBoard: function (boardTitle, callback) {
         // creates new board, saves it and calls the callback function with its data
+        this._api_post('/write-new-board', boardTitle, (response) =>
+        {
+            this._data['boards'] = response;
+        });
     },
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data

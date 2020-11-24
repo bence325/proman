@@ -1,5 +1,5 @@
 // It uses data_handler.js to visualize elements
-import { dataHandler } from "./data_handler.js";
+import {dataHandler} from "./data_handler.js";
 
 export let dom = {
     init: function () {
@@ -39,5 +39,13 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
     },
-    // here comes more features
+    addClick: function () {
+        document.querySelector('#new_submit').addEventListener('click', () => {
+            dataHandler.createNewBoard(dom.getNewBoard(), this.loadBoards())
+        })
+    },
+    getNewBoard: function () {
+        const title = document.querySelector('#board_title').value;
+        return {title}
+    }
 };
