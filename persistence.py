@@ -34,9 +34,11 @@ def _get_data_from_tables(cursor: RealDictCursor, table):
 def write_data_to_boards(cursor: RealDictCursor, title):
     query = """
         INSERT INTO boards (title)
-        VALUES (%(title)s)"""
+        VALUES (%(title)s)
+        RETURNING id"""
     params = {'title': title}
     cursor.execute(query, params)
+    return cursor.fetchone()
 
 
 def _get_data(table, force):

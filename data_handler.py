@@ -31,4 +31,4 @@ def get_cards_for_board(board_id):
 
 
 def write_new_board(title):
-    persistence.write_data_to_boards(title)
+    return persistence.write_data_to_boards(title)

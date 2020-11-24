@@ -28,9 +28,7 @@ export let dataHandler = {
             })
         })
             .then(response => response.json())
-            .then(json_response => {
-                callback(json_response)
-            })
+            .then(json_response => callback(json_response))
             .catch((error) => {
                 console.log("Fetch error: " + error);
             });

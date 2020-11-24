@@ -37,7 +37,7 @@ def get_cards_for_board(board_id: int):
 @json_response
 def write_new_board():
     req = request.get_json()
-    data_handler.write_new_board(req['title'])
+    return data_handler.write_new_board(req['title'])
 
 
 def main():
