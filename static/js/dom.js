@@ -306,7 +306,7 @@ export let dom = {
             `;
         this.insertAdjacentHTML("afterend", linput);
         this.remove();
-        // not working yet...
+        // not working yet....
         // document.querySelector(".board-header").addEventListener("click", () => {
         //     console.log('1')
         //     dom.backOldTitle(boardId, oldTitle);
