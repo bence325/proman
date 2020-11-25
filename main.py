@@ -53,6 +53,13 @@ def change_board_title(board_id):
     return data_handler.change_board_title(board_id, req["title"])
 
 
+@app.route("/add-new-column", methods=['POST', 'GET'])
+@json_response
+def add_new_column():
+    columnData = request.get_json()
+    return data_handler.add_new_column(columnData)
+
+
 def main():
     app.run(debug=True)
 

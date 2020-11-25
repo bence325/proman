@@ -96,14 +96,14 @@ export let dom = {
         }
         let submit = `
         <div id="addNewBoard" class="board-toggle">
-            <label for="board_title">Board title</label>
-            <input type="text" id="board_title" name="board_title">
+            <label for="title">Board title</label>
+            <input type="text" id="title" name="title">
             <button type="submit" id="newBoardSubmit">Save</button>
         </div>
         `;
         header.insertAdjacentHTML('beforeend', submit);
         document.querySelector('#newBoardSubmit').addEventListener('click', () => {
-            dataHandler.createNewBoard(dom.getNewBoard(), (board) => {
+            dataHandler.createNewBoard(dom.getNewTitle(), (board) => {
                 dom.appendNewBoard(board);
                 document.querySelector("#addNewBoard").remove();
                 let addNewBoardButton = `
@@ -114,8 +114,8 @@ export let dom = {
             })
         })
     },
-    getNewBoard: function () {
-        const title = document.querySelector('#board_title').value;
+    getNewTitle: function () {
+        const title = document.querySelector('#title').value;
         return {title}
     },
     appendNewBoard: function (board) {
@@ -125,7 +125,7 @@ export let dom = {
             <div class="board-header" id="heading${board.id}">
                 <span class="board-title">${board.title}</span> 
                 <button class="board-add">Add Card  <i class="fas fa-plus"></i></button> 
-                <button class="board-add">Add Column  <i class="fas fa-plus"></i></button> 
+                <button class="board-add" id="addColumnToBoard-${board.id}">Add Column  <i class="fas fa-plus"></i></button> 
                 <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -135,6 +135,7 @@ export let dom = {
         container.insertAdjacentHTML("beforeend", boardList);
         document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
         document.querySelector(`#board-${board.id}`).lastElementChild.firstElementChild.addEventListener("click", this.changeBoardTitle);
+        document.querySelector(`#addColumnToBoard-${board.id}`).addEventListener("click", this.addColumnToBoard);
     },
     changeBoardTitle: function () {
         let boardId = this.parentNode.parentNode.id.split("-")[1];
@@ -142,15 +143,15 @@ export let dom = {
         let head = this.parentNode;
         this.remove();
         let submit = `
-            <div id="addNewBoardTitle" class="board-title">
-                <label for="board_title"></label>
-                <input type="text" id="board_title" name="board_title" placeholder="${oldTitle}">
+            <div id="addNewBoardTitle" class="board-add">
+                <label for="title"></label>
+                <input type="text" id="title" name="title" placeholder="${oldTitle}">
                 <button type="submit" id="newTitleSubmit">Save</button>
             </div>
             `;
         head.insertAdjacentHTML('afterbegin', submit);
         document.querySelector('#newTitleSubmit').addEventListener('click', (e) => {
-            let newTitle = dom.getNewBoard();
+            let newTitle = dom.getNewTitle();
             dataHandler.changeBoardTitle(boardId, newTitle, (response) => {
                 let newBoardTitle = `
                     <span class="board-title">${newTitle['title']}</span>
@@ -159,6 +160,32 @@ export let dom = {
                 document.querySelector(`#heading${boardId}`).insertAdjacentHTML('afterbegin', newBoardTitle);
                 document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild.addEventListener("click", dom.changeBoardTitle);
                 console.log(document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild);
+            });
+        })
+    },
+    addColumnToBoard: function () {
+        let columnData = {board_id: this.id.split("-")[1]};
+        let submit = `
+        <div id="newColumnTitle" class="board-add">
+            <label for="title"></label>
+            <input type="text" id="title" name="title" placeholder="New Column">
+            <button type="submit" id="newTitleSubmit">Save</button>
+        </div>
+        `;
+        this.insertAdjacentHTML("afterend", submit);
+        this.remove();
+        document.querySelector('#newTitleSubmit').addEventListener('click', (e) => {
+            let columnTitle = dom.getNewTitle();
+            Object.assign(columnData, columnTitle);
+            console.log(columnData)
+            dataHandler.addColumnToBoard(columnData, (response) => {
+                console.log(response);
+                let addNewColumn = `
+                    <button class="board-add" id="addColumnToBoard-${columnData.board_id}">Add Column  <i class="fas fa-plus"></i></button> 
+                `;
+                document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
+                document.querySelector("#newColumnTitle").remove();
+                document.querySelector(`#addColumnToBoard-${columnData.board_id}`).addEventListener("click", dom.addColumnToBoard);
             });
         })
     }

@@ -84,7 +84,13 @@ export let dataHandler = {
     changeBoardTitle:function (boardId, boardTitle, callback) {
         this._api_post(`/change-board-title/${boardId}`, boardTitle, (response) => {
             // this._data['boards'] = response;
-            callback(response)
+            callback(response);
+        });
+    },
+    addColumnToBoard: function (boardData, callback) {
+        this._api_post('/add-new-column', boardData, (response) => {
+            console.log(response)
+            callback(response);
         });
     }
 };

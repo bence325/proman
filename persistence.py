@@ -95,3 +95,27 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', force)
+
+
+@database_connection.connection_handler
+def add_new_column(cursor: RealDictCursor, columnData):
+    cursor.execute(sql.SQL("SELECT * FROM statuses"))
+    existing_statuses = cursor.fetchall()
+    for status in existing_statuses:
+        if columnData['title'] == status['title']:
+            return "Existing column name!"
+    else:
+        cursor.execute(
+            sql.SQL("INSERT INTO statuses (title) VALUES ({new_status})").
+                format(new_status=sql.Literal(columnData['title']))
+        )
+        cursor.execute(
+            sql.SQL("SELECT id FROM statuses WHERE title = {new_status}").
+                format(new_status=sql.Literal(columnData['title']))
+        )
+        new_status_id = cursor.fetchone()
+        query = """
+                UPDATE boards SET statuses = array_append(statuses, %(new_status_id)s) WHERE id = %(board_id)s"""
+        params = {'board_id': columnData['board_id'], 'new_status_id': new_status_id['id']}
+        cursor.execute(query, params)
+    return "ok"

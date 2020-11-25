@@ -40,3 +40,7 @@ def write_new_board(title):
 
 def change_board_title(board_id, new_title):
     return persistence.change_board_title(board_id, new_title)
+
+
+def add_new_column(columnData):
+    return persistence.add_new_column(columnData)
