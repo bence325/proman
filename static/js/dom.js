@@ -193,17 +193,25 @@ export let dom = {
     dropZoneDropHandler: function (e) {
         e.preventDefault();
         let dropZone;
+        let boardId = e.target.parentNode;
         let draggedElement = document.querySelector('.dragged');
+        let cardJsonData = JSON.parse(draggedElement.dataset.json)
+        let boardJsonData = e.target.parentNode.parentNode
         if (e.target.classList.contains('active-zone')) {
             dropZone = e.target.querySelector('.board-column-content')
         } else if (e.target.classList.contains('board-column-content')) {
-            dropZone = e.target
+            dropZone = e.target;
+            boardId = e.target.parentNode.parentNode
         } else if (e.target.classList.contains('card')) {
-            dropZone = e.target.parentNode
+            dropZone = e.target.parentNode;
+            boardId = e.target.parentNode.parentNode.parentNode
         } else if (e.target.classList.contains('card-title')) {
             dropZone = e.target.parentNode.parentNode
+            boardId = e.target.parentNode.parentNode.parentNode.parentNode
         }
-        dropZone.appendChild(draggedElement)
+        if (parseInt(boardId.dataset.parent) === cardJsonData.board_id) {
+            dropZone.appendChild(draggedElement)
+        }
     },
     setDropZonesHighlight: function (cardBoardId, highlight = true) {
         const dropZones = document.querySelectorAll(".board-column");
