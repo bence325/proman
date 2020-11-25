@@ -200,6 +200,14 @@ export let dom = {
         if (e.target.classList.contains('board-column-content')) {
             e.target.appendChild(draggedElement)
         }
+        if (e.target.classList.contains('card')) {
+            let dropZone = e.target.parentNode
+            dropZone.appendChild(draggedElement)
+        }
+        if (e.target.classList.contains('card-title')) {
+            let dropZone = e.target.parentNode.parentNode
+            dropZone.appendChild(draggedElement)
+        }
     },
     setDropZonesHighlight: function (cardBoardId, highlight = true) {
         const dropZones = document.querySelectorAll(".board-column");
