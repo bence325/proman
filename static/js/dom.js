@@ -266,6 +266,7 @@ export let dom = {
                             `;
                         let boardBody = document.querySelector(`#collapse${columnData.board_id}`)
                         boardBody.insertAdjacentHTML('beforeend', newColumn);
+                        dom.addEventListenerToContainer();
                     };
                 };
             });
