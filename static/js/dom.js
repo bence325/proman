@@ -77,7 +77,6 @@ export let dom = {
                 </div>
                 `;
         }
-        let boardId = boardBody.id;
         const outHtml = `
             <div class="board-columns" id="collapse${boardId}" class="collapse" aria-labelledby="heading${boardId}" data-parent="board-#${boardId}">
                 ${columnList}
