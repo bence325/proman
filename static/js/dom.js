@@ -196,7 +196,6 @@ export let dom = {
         let boardId = e.target.parentNode;
         let draggedElement = document.querySelector('.dragged');
         let cardJsonData = JSON.parse(draggedElement.dataset.json)
-        let boardJsonData = e.target.parentNode.parentNode
         if (e.target.classList.contains('active-zone')) {
             dropZone = e.target.querySelector('.board-column-content')
         } else if (e.target.classList.contains('board-column-content')) {
