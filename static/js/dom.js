@@ -84,6 +84,7 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
         dom.addEventListenerToContainer();
+        document.querySelector(`[data-status="${columnName}"]`).addEventListener("click", this.changeColumnTitle);
     },
     addNewBoardEventListener: function (addNewBoarButton) {
         addNewBoarButton.addEventListener("click", this.createNewBoard);
@@ -271,5 +272,22 @@ export let dom = {
                 };
             });
         })
+    },
+    changeColumnTitle: function () {
+        let boardId = this.parentNode.parentNode.id.split("-")[1];
+        let oldTitle = this.innerHTML;
+        let head = this.parentNode;
+        this.remove();
+        let submit = `
+            <div id="addNewBoardTitle" class="board-add">
+                <label for="title"></label>
+                <input type="text" id="title" name="title" placeholder="${oldTitle}">
+                <button type="submit" id="newTitleSubmit">Save</button>
+            </div>
+            `;
+        head.insertAdjacentHTML('afterbegin', submit);
+        document.querySelector('#newTitleSubmit').addEventListener('click', (e) => {
+            let newTitle = dom.getNewTitle();
+        };
     }
 };
