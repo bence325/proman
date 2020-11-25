@@ -192,22 +192,18 @@ export let dom = {
     },
     dropZoneDropHandler: function (e) {
         e.preventDefault();
+        let dropZone;
         let draggedElement = document.querySelector('.dragged');
         if (e.target.classList.contains('active-zone')) {
-            let dropZone = e.target.querySelector('.board-column-content')
-            dropZone.appendChild(draggedElement);
+            dropZone = e.target.querySelector('.board-column-content')
+        } else if (e.target.classList.contains('board-column-content')) {
+            dropZone = e.target
+        } else if (e.target.classList.contains('card')) {
+            dropZone = e.target.parentNode
+        } else if (e.target.classList.contains('card-title')) {
+            dropZone = e.target.parentNode.parentNode
         }
-        if (e.target.classList.contains('board-column-content')) {
-            e.target.appendChild(draggedElement)
-        }
-        if (e.target.classList.contains('card')) {
-            let dropZone = e.target.parentNode
-            dropZone.appendChild(draggedElement)
-        }
-        if (e.target.classList.contains('card-title')) {
-            let dropZone = e.target.parentNode.parentNode
-            dropZone.appendChild(draggedElement)
-        }
+        dropZone.appendChild(draggedElement)
     },
     setDropZonesHighlight: function (cardBoardId, highlight = true) {
         const dropZones = document.querySelectorAll(".board-column");
