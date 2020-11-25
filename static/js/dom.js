@@ -4,7 +4,6 @@ import { dataHandler } from "./data_handler.js";
 export let dom = {
     init: function () {
         // This function should run once, when the page is loaded.
-        this.loadStatuses();
         this.addNewBoardEventListener(document.querySelector("#newBoard"));
         this.addRegisterEventListeners();
     },
@@ -105,7 +104,7 @@ export let dom = {
             <p><label for="username">Username:</label>
             <input type="text" id="username" name="username" placeholder="choose a name" required></p>
             <p><label for="password">Password:</label>
-            <input type="text" id="password" name="password" placeholder="choose a password" required></p>
+            <input type="password" id="password" name="password" placeholder="choose a password" required></p>
             <p><button type="submit" id="sendRegistration">Submit</button></p>
         </div>`;
         header.insertAdjacentHTML('afterend', form);
@@ -116,14 +115,24 @@ export let dom = {
             }
             dataHandler._api_post('/registration', registrationData, function (confirmation){
                 document.querySelector("#new-user").remove();
-                let feedback = `<p>${confirmation}</p>`;
+                let feedback = `<p id="confirmation">${confirmation}</p>`;
                 header.insertAdjacentHTML('afterend', feedback);
+                setTimeout(() => document.querySelector("#confirmation").remove(), 5000);
             })
         })
 
     },
     login: function () {
-
+        let header = document.querySelector("#header");
+        let form = `
+        <div id="log-user">
+            <p><label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="choose a name" required></p>
+            <p><label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="choose a password" required></p>
+            <p><button type="submit" id="sendLoginData">Submit</button></p>
+        </div>`;
+        header.insertAdjacentHTML('afterend', form);
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");
