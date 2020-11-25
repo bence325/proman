@@ -247,7 +247,6 @@ export let dom = {
                 document.querySelector("#addNewBoardTitle").remove();
                 document.querySelector(`#heading${boardId}`).insertAdjacentHTML('afterbegin', newBoardTitle);
                 document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild.addEventListener("click", dom.changeBoardTitle);
-                console.log(document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild);
             });
         })
     },
@@ -311,9 +310,7 @@ export let dom = {
         document.querySelector('#newCardSubmit').addEventListener('click', (e) => {
             let cardTitle = dom.getNewTitle();
             Object.assign(cardData, cardTitle);
-            console.log(cardData)
             dataHandler.createNewCard(cardData, cardData.board_id, (response) => {
-                console.log(response);
                 let addNewColumn = `
                         <button class="board-add-card" id="addColumnToBoard-${cardData.board_id}">Add Card <i class="fas fa-plus"></i></button> 
                     `;
