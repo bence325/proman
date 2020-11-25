@@ -135,6 +135,7 @@ export let dom = {
             `;
         container.insertAdjacentHTML("beforeend", boardList);
         document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
+        document.querySelector(`#board-${board.id}`).lastElementChild.firstElementChild.addEventListener("click", this.changeBoardTitle);
     },
     addEventListenerToCards: function () {
         let cards = document.querySelectorAll('.card');
@@ -203,7 +204,6 @@ export let dom = {
                 dropZone.classList.remove("over-zone");
             }
         }
-        document.querySelector(`#board-${board.id}`).lastElementChild.firstElementChild.addEventListener("click", this.changeBoardTitle);
     },
     changeBoardTitle: function () {
         let boardId = this.parentNode.parentNode.id.split("-")[1];
