@@ -28,12 +28,28 @@ def write_data_to_boards(cursor: RealDictCursor, title):
 
 @database_connection.connection_handler
 def change_board_title(cursor: RealDictCursor, board_id, new_title):
-    print(board_id, new_title)
     cursor.execute(
         sql.SQL("UPDATE boards SET title = {new_title} WHERE id = {id}").
             format(id=sql.Literal(board_id), new_title=sql.Literal(new_title))
     )
     return "ok"
+
+
+@database_connection.connection_handler
+def get_statuses_to_board(cursor: RealDictCursor, board_id):
+    cursor.execute(
+        sql.SQL("SELECT statuses FROM boards WHERE id = {id}").
+            format(id=sql.Literal(board_id))
+    )
+    status_ids = cursor.fetchone()
+    result = []
+    for item in status_ids['statuses']:
+        cursor.execute(
+            sql.SQL("SELECT title FROM statuses WHERE id = {id}").
+                format(id=sql.Literal(item))
+        )
+        result.append(cursor.fetchone()['title'])
+    return result
 
 
 def _get_data(table, force):
@@ -64,3 +80,27 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', force)
+
+
+@database_connection.connection_handler
+def add_new_column(cursor: RealDictCursor, columnData):
+    cursor.execute(sql.SQL("SELECT * FROM statuses"))
+    existing_statuses = cursor.fetchall()
+    for status in existing_statuses:
+        if columnData['title'] == status['title']:
+            return "Existing column name!"
+    else:
+        cursor.execute(
+            sql.SQL("INSERT INTO statuses (title) VALUES ({new_status})").
+                format(new_status=sql.Literal(columnData['title']))
+        )
+        cursor.execute(
+            sql.SQL("SELECT id FROM statuses WHERE title = {new_status}").
+                format(new_status=sql.Literal(columnData['title']))
+        )
+        new_status_id = cursor.fetchone()
+        query = """
+                UPDATE boards SET statuses = array_append(statuses, %(new_status_id)s) WHERE id = %(board_id)s"""
+        params = {'board_id': columnData['board_id'], 'new_status_id': new_status_id['id']}
+        cursor.execute(query, params)
+    return "ok"

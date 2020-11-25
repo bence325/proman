@@ -30,8 +30,8 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
-def get_statuses():
-    return persistence.get_statuses(force=True)
+def get_statuses_to_board(board_id):
+    return persistence.get_statuses_to_board(board_id)
 
 
 def write_new_board(title):
@@ -40,3 +40,7 @@ def write_new_board(title):
 
 def change_board_title(board_id, new_title):
     return persistence.change_board_title(board_id, new_title)
+
+
+def add_new_column(columnData):
+    return persistence.add_new_column(columnData)
