@@ -295,8 +295,9 @@ export let dom = {
         this.insertAdjacentHTML("afterend", linput);
         this.remove();
         // not working yet...
-        // window.addEventListener("click", () => {
-        //    dom.backOldTitle(boardId, oldTitle);
+        // document.querySelector(".board-header").addEventListener("click", () => {
+        //     console.log('1')
+        //     dom.backOldTitle(boardId, oldTitle);
         // })
         document.querySelector(`.submit-${boardId}`).addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
