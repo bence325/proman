@@ -32,7 +32,6 @@ export let dataHandler = {
             .catch((error) => {
                 console.log("Fetch error: " + error);
             });
-
     },
     init: function () {
     }
