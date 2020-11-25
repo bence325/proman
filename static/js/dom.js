@@ -139,7 +139,7 @@ export let dom = {
             </section>
             `;
         container.insertAdjacentHTML("beforeend", boardList);
-        document.querySelector(`[data-boardid="${board.id}"]`).addEventListener("click", this.loadCards);
+        document.querySelector(`[data-boardContent="${board.id}"]`).addEventListener("click", this.loadCards);
         document.querySelector(`#board-${board.id}`).lastElementChild.firstElementChild.addEventListener("click", this.changeBoardTitle);
         document.querySelector(`#addColumnToBoard-${board.id}`).addEventListener("click", this.addColumnToBoard);
     },
