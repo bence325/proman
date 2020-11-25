@@ -157,7 +157,13 @@ export let dom = {
         })
     },
     logout: function () {
-
+        dataHandler._api_get('/logout', function (success) {
+            let logoutButton = document.querySelector('#login');
+            logoutButton.removeEventListener('click', dom.logout);
+            logoutButton.innerHTML = "Log in";
+            logoutButton.addEventListener('click', dom.login);
+            document.querySelector('#hello').innerHTML = " ";
+        })
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");

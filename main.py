@@ -64,6 +64,13 @@ def login():
     return False
 
 
+@app.route("/logout", methods=['GET'])
+@json_response
+def logout():
+    session.pop('username')
+    return True
+
+
 @app.route("/change-board-title/<int:board_id>", methods=['POST', 'GET'])
 @json_response
 def change_board_title(board_id):
