@@ -6,6 +6,7 @@ export let dom = {
         // This function should run once, when the page is loaded.
         this.loadStatuses();
         this.addNewBoardEventListener();
+        this.addRegisterEventListeners();
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -18,8 +19,8 @@ export let dom = {
         // it adds necessary event listeners also
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.innerHTML = "";
-        let boardContainer = document.querySelector('#boards')
-        boardContainer.classList.add('board-container', 'p-2')
+        let boardContainer = document.querySelector('#boards');
+        boardContainer.classList.add('board-container', 'p-2');
 
         for(let board of boards){
             this.appendNewBoard(board)
@@ -86,6 +87,29 @@ export let dom = {
     addNewBoardEventListener: function () {
         document.querySelector("#newBoard").addEventListener("click", this.newBoardTitle);
     },
+    addRegisterEventListeners: function () {
+        document.querySelector("#register").addEventListener("click", this.register);
+        document.querySelector("#login").addEventListener("click", this.login);
+    },
+    register: function () {
+        let header = document.querySelector("#header");
+        let form = `
+        <div id="new-user">
+            <p><label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="choose a name" required></p>
+            <p><label for="password">Password:</label>
+            <input type="text" id="password" name="password" placeholder="choose a password" required></p>
+            <p><button type="submit" id="sendRegistration">Submit</button></p>
+        </div>`;
+        header.insertAdjacentHTML('afterend', form);
+        document.querySelector("#sendRegistration").addEventListener('click', () => {
+
+        })
+
+    },
+    login: function () {
+
+    },
     newBoardTitle: function (e) {
         let header = document.querySelector("#header");
         if (e.target.localName === "button") {
@@ -109,7 +133,7 @@ export let dom = {
                     <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
                 `;
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
-                dom.addNewBoardEvenetListener();
+                dom.addNewBoardEventListener();
             })
         })
     },
