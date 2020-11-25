@@ -320,7 +320,6 @@ export let dom = {
                 document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
                 document.querySelector("#newColumnTitle").remove();
                 document.querySelector(`#addColumnToBoard-${cardData.board_id}`).addEventListener("click", dom.addColumnToBoard);
-
                 let jsonData = JSON.stringify(response)
                 let boardColumn = (document.querySelector(`[data-parent='${cardData.board_id}']`)).children[0]
                 let column = boardColumn.children[1]
@@ -330,7 +329,7 @@ export let dom = {
                     <div class="card-remove">
                         <i class="fas fa-trash-alt"></i>
                     </div>
-                    <div class="card-title" data-cardId="${cardData['id']}">${cardData['title']}</div>
+                    <div class="card-title" data-cardId="${response['id']}">${response['title']}</div>
                 </div>
                 `;
                 column.insertAdjacentHTML('afterbegin', newCard);

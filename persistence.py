@@ -119,7 +119,7 @@ def add_new_card(cursor: RealDictCursor, board_id, title):
     query = """
            INSERT INTO cards (board_id, title, status_id, order_cards)
            VALUES (%(board_id)s, %(title)s, 0, 0)
-           RETURNING board_id, title, status_id, order_cards"""
+           RETURNING id, board_id, title, status_id, order_cards"""
     params = {'board_id': board_id, 'title': title}
     cursor.execute(query, params)
     return cursor.fetchone()
