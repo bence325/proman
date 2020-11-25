@@ -286,6 +286,7 @@ export let dom = {
                         let boardBody = document.querySelector(`#collapse${columnData.board_id}`)
                         boardBody.insertAdjacentHTML('beforeend', newColumn);
                         dom.addEventListenerToContainer();
+                        document.querySelector(`[data-status="${columnData.title}"`).previousElementSibling.addEventListener("click", dom.changeColumnTitle);
                     };
                 };
             });
@@ -299,7 +300,7 @@ export let dom = {
         })
     },
     changeColumnTitle: function () {
-        let boardId = this.parentNode.parentNode.dataset.parent.split("#")[1];
+        let boardId = this.parentNode.parentNode.dataset.parent;
         let oldTitle = this.innerHTML;
         let linput = `
                 <input type="text" id="title" name="title" class="submit-${boardId}" placeholder="${oldTitle}">
@@ -344,7 +345,7 @@ export let dom = {
         document.querySelector(`.submit-${boardId}`).remove();
     },
     getColumnIndex: function (boardId, oldTitle) {
-        let columns = document.querySelector(`[data-parent="board-#${boardId}"]`).children;
+        let columns = document.querySelector(`[data-parent="${boardId}"]`).children;
         let index = 0;
         for (let column of columns) {
             if (column.children[0].tagName === "INPUT") {
