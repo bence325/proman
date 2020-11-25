@@ -1,24 +1,9 @@
-import csv
 import database_connection
 from psycopg2.extras import RealDictCursor
 from psycopg2 import sql
 
 
 _cache = {}  # We store cached data in this dict to avoid multiple file readings
-
-
-def _read_csv(file_name):
-    """
-    Reads content of a .csv file
-    :param file_name: relative path to data file
-    :return: OrderedDict
-    """
-    with open(file_name) as boards:
-        rows = csv.DictReader(boards, delimiter=',', quotechar='"')
-        formatted_data = []
-        for row in rows:
-            formatted_data.append(dict(row))
-        return formatted_data
 
 
 @database_connection.connection_handler
