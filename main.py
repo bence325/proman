@@ -33,10 +33,10 @@ def get_cards_for_board(board_id: int):
     return data_handler.get_cards_for_board(board_id)
 
 
-@app.route("/get-statuses")
+@app.route("/get-statuses-to-board/<int:board_id>")
 @json_response
-def get_statuses():
-    return data_handler.get_statuses()
+def get_statuses_to_board(board_id):
+    return data_handler.get_statuses_to_board(board_id)
 
 
 @app.route("/write-new-board", methods=['POST', 'GET'])
@@ -51,6 +51,27 @@ def write_new_board():
 def register_new_user():
     registration = request.get_json()
     return data_handler.register_new_user(registration)
+
+
+@app.route("/change-board-title/<int:board_id>", methods=['POST', 'GET'])
+@json_response
+def change_board_title(board_id):
+    req = request.get_json()
+    return data_handler.change_board_title(board_id, req["title"])
+
+
+@app.route("/change-card-status/<int:card_id>", methods=['POST', 'GET'])
+@json_response
+def change_card_status(card_id):
+    req = request.get_json()
+    return data_handler.change_card_status(card_id, req)
+
+
+@app.route("/add-new-column", methods=['POST', 'GET'])
+@json_response
+def add_new_column():
+    columnData = request.get_json()
+    return data_handler.add_new_column(columnData)
 
 
 def main():

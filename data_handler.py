@@ -31,8 +31,9 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
-def get_statuses():
-    return persistence.get_statuses(force=True)
+def get_statuses_to_board(board_id):
+    return persistence.get_statuses_to_board(board_id)
+
 
 def write_new_board(title):
     return persistence.write_data_to_boards(title)
@@ -42,3 +43,19 @@ def register_new_user(data):
     username = data['username']
     password_hash = werkzeug.security.generate_password_hash(data['password'])
     return persistence.add_new_user(username, password_hash)
+
+def change_board_title(board_id, new_title):
+    return persistence.change_board_title(board_id, new_title)
+
+
+def change_card_status(card_id, new_card_status):
+    statuses = persistence.get_statuses()
+    for status in statuses:
+        if status['title'] == new_card_status:
+            new_status = status['id']
+    return persistence.change_card_status(card_id, new_status)
+
+
+
+def add_new_column(columnData):
+    return persistence.add_new_column(columnData)

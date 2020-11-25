@@ -32,7 +32,6 @@ export let dataHandler = {
             .catch((error) => {
                 console.log("Fetch error: " + error);
             });
-
     },
     init: function () {
     }
@@ -50,9 +49,9 @@ export let dataHandler = {
     getBoard: function (boardId, callback) {
         // the board is retrieved and then the callback function is called with the board
     },
-    getStatuses: function (callback) {
+    getStatusesToBoard: function (boardId, callback) {
         // the statuses are retrieved and then the callback function is called with the statuses
-        this._api_get('/get-statuses', (response) => {
+        this._api_get(`/get-statuses-to-board/${boardId}`, (response) => {
             this._data['statuses'] = response;
             callback(response);
         });
@@ -79,6 +78,20 @@ export let dataHandler = {
     },
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
+    },
+    changeBoardTitle:function (boardId, boardTitle, callback) {
+        this._api_post(`/change-board-title/${boardId}`, boardTitle, (response) => {
+            callback(response);
+        });
+    },
+    addColumnToBoard: function (boardData, callback) {
+        this._api_post('/add-new-column', boardData, (response) => {
+            callback(response);
+        });
+    },
+    changeCardTitle: function (cardId, newStatus, callback) {
+        this._api_post(`/change-card-status/${cardId}`, newStatus, (response) => {
+            callback(response)
+        })
     }
-    // here comes more features
 };
