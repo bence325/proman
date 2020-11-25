@@ -82,7 +82,7 @@ export let dom = {
                 `;
         }
         const outHtml = `
-            <div class="board-columns" id="collapse${boardId}" class="collapse" aria-labelledby="heading${boardId}" data-parent="board-#${boardId}">
+            <div class="board-columns" id="collapse${boardId}" class="collapse" aria-labelledby="heading${boardId}" data-parent="${boardId}">
                 ${columnList}
             </div>
             `;
@@ -160,17 +160,18 @@ export let dom = {
         }
     },
     dragStartHandler: function (e) {
-        dom.setDropZonesHighlight();
+        let data = JSON.parse(this.dataset.json);
+        dom.setDropZonesHighlight(data.board_id);
         this.classList.add('dragged', 'drag-feedback');
         e.dataTransfer.setData('type/dragged-box', 'dragged');
     },
     dragEndHandler: function () {
-        dom.setDropZonesHighlight(false)
-        this.classList.remove('dragged');
-        this.classList.remove('drag-feedback');
         let actualDataset = this
         let data = JSON.parse(this.dataset.json);
         let newStatus = this.parentNode.dataset.status
+        dom.setDropZonesHighlight(data.board_id, false)
+        this.classList.remove('dragged');
+        this.classList.remove('drag-feedback');
         dom.changeStatus(actualDataset, data, newStatus);
     },
     dropZoneEnterHandler: function (e) {
@@ -199,12 +200,12 @@ export let dom = {
         if (e.target.classList.contains('board-column-content')) {
             e.target.appendChild(draggedElement)
         }
-        // here comes more features
     },
-    setDropZonesHighlight: function (highlight = true) {
+    setDropZonesHighlight: function (cardBoardId, highlight = true) {
         const dropZones = document.querySelectorAll(".board-column");
         for (const dropZone of dropZones) {
-            if (highlight) {
+            let boardId = dropZone.parentNode.dataset.parent
+            if (highlight && parseInt(boardId) === cardBoardId) {
                 dropZone.classList.add("active-zone");
             } else {
                 dropZone.classList.remove("active-zone");
