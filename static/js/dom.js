@@ -49,11 +49,14 @@ export let dom = {
         // shows the cards of a board
         // it adds necessary event listeners also
         for (let card of cards) {
+            let jsonData = JSON.stringify(card)
             let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
             let newCard = "";
             newCard += `
-                <div class="card" draggable="true">
-                    <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                <div class="card" draggable="true" data-json='${jsonData}'>
+                    <div class="card-remove">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
                     <div class="card-title" data-cardId="${card['id']}">${card['title']}</div>
                 </div>
                 `;
@@ -165,6 +168,10 @@ export let dom = {
         dom.setDropZonesHighlight(false)
         this.classList.remove('dragged');
         this.classList.remove('drag-feedback');
+        let actualDataset = this
+        let data = JSON.parse(this.dataset.json);
+        let newStatus = this.parentNode.dataset.status
+        dom.changeStatus(actualDataset, data, newStatus);
     },
     dropZoneEnterHandler: function (e) {
         if (e.dataTransfer.types.includes('type/dragged-box')) {
@@ -181,9 +188,6 @@ export let dom = {
     },
     dropZoneOverHandler: function (e) {
         e.preventDefault()
-        // if (e.dataTransfer.types.includes('type/dragged-box')) {
-        //     e.preventDefault();
-        // }
     },
     dropZoneDropHandler: function (e) {
         e.preventDefault();
@@ -272,6 +276,14 @@ export let dom = {
                 };
             });
         })
+    },
+    changeStatus: function (actualDataset, data, newStatus) {
+        let cardId = data.id;
+        dataHandler.changeCardTitle(cardId, newStatus, () => {
+            data.status_id = actualDataset.parentNode.dataset.status
+            actualDataset.dataset.json = JSON.stringify(data)
+        })
+    },
     },
     changeColumnTitle: function () {
         let boardId = this.parentNode.parentNode.id.split("-")[1];

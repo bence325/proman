@@ -53,6 +53,13 @@ def change_board_title(board_id):
     return data_handler.change_board_title(board_id, req["title"])
 
 
+@app.route("/change-card-status/<int:card_id>", methods=['POST', 'GET'])
+@json_response
+def change_card_status(card_id):
+    req = request.get_json()
+    return data_handler.change_card_status(card_id, req)
+
+
 @app.route("/add-new-column", methods=['POST', 'GET'])
 @json_response
 def add_new_column():
