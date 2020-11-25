@@ -120,19 +120,44 @@ export let dom = {
                 setTimeout(() => document.querySelector("#confirmation").remove(), 5000);
             })
         })
-
     },
     login: function () {
         let header = document.querySelector("#header");
         let form = `
         <div id="log-user">
             <p><label for="username">Username:</label>
-            <input type="text" id="username" name="username" placeholder="choose a name" required></p>
+            <input type="text" id="username" name="username" placeholder="Your username" required></p>
             <p><label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="choose a password" required></p>
+            <input type="password" id="password" name="password" placeholder="Your password" required></p>
             <p><button type="submit" id="sendLoginData">Submit</button></p>
         </div>`;
         header.insertAdjacentHTML('afterend', form);
+        document.querySelector("#sendLoginData").addEventListener('click', () => {
+            let loginData = {
+                username: document.querySelector('#username').value,
+                password: document.querySelector('#password').value
+            }
+            dataHandler._api_post('/login', loginData, function (success) {
+                if (success) {
+                    document.querySelector("#log-user").remove();
+                    let loginButton = document.querySelector("#login");
+                    let welcomeUser = document.querySelector("#hello");
+                    welcomeUser.innerHTML = `Welcome, ${loginData.username}!`;
+                    loginButton.removeEventListener('click', dom.login);
+                    loginButton.innerHTML = "Log out";
+                    loginButton.addEventListener('click', dom.logout);
+                }
+                else {
+                    let loginForm = document.querySelector("#log-user");
+                    let errorMessage = `<p id="error">Wrong username or password!</p>`;
+                    loginForm.insertAdjacentHTML("beforeend", errorMessage);
+                    setTimeout(() => document.querySelector("#error").remove(), 5000);
+                }
+            })
+        })
+    },
+    logout: function () {
+
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");

@@ -1,9 +1,10 @@
-from flask import Flask, render_template, url_for, make_response, request, jsonify
+from flask import Flask, render_template, url_for, make_response, request, jsonify, session
 from util import json_response
 
 import data_handler
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route("/")
@@ -51,6 +52,16 @@ def write_new_board():
 def register_new_user():
     registration = request.get_json()
     return data_handler.register_new_user(registration)
+
+
+@app.route("/login", methods=['POST'])
+@json_response
+def login():
+    credentials = request.get_json()
+    if data_handler.login(credentials):
+        session['username'] = credentials['username']
+        return True
+    return False
 
 
 @app.route("/change-board-title/<int:board_id>", methods=['POST', 'GET'])

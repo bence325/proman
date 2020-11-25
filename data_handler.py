@@ -59,3 +59,14 @@ def change_card_status(card_id, new_card_status):
 
 def add_new_column(columnData):
     return persistence.add_new_column(columnData)
+
+
+def login(credentials):
+    username = credentials['username']
+    password = credentials['password']
+    usernames = persistence.get_all_usernames()
+    if username in usernames:
+        hashed_password = persistence.get_password_hash(username)
+        return werkzeug.security.check_password_hash(hashed_password, password)
+    else:
+        return False
