@@ -50,6 +50,9 @@ def change_card_status(card_id, new_card_status):
     return persistence.change_card_status(card_id, new_status)
 
 
-
 def add_new_column(columnData):
     return persistence.add_new_column(columnData)
+
+
+def add_new_card(board_id, title):
+    return persistence.add_new_card(board_id, title)

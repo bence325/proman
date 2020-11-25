@@ -1,5 +1,5 @@
 // It uses data_handler.js to visualize elements
-import { dataHandler } from "./data_handler.js";
+import {dataHandler} from "./data_handler.js";
 
 export let dom = {
     init: function () {
@@ -23,6 +23,7 @@ export let dom = {
         for (let board of boards) {
             this.appendNewBoard(board)
         }
+        dom.newCardEventListener();
     },
     loadCards: function () {
         // retrieves cards and makes showCards called
@@ -32,7 +33,7 @@ export let dom = {
         let arrow = boardBody.querySelector(".fas");
         if (!boardColumns) {
             dom.loadStatusesToBoard(boardBody, boardId);
-            dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards){
+            dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards) {
                 if (cards) {
                     // console.log(cards)
                     dom.showCards(boardBody, cards);
@@ -66,14 +67,14 @@ export let dom = {
         dom.addEventListenerToCards();
     },
     // here comes more features
-    loadStatusesToBoard: function (boardBody, boardId){
+    loadStatusesToBoard: function (boardBody, boardId) {
         dataHandler.getStatusesToBoard(boardId, function (statuses) {
             dom.addStatusColumns(boardBody, boardId);
         });
     },
     addStatusColumns: function (boardBody, boardId) {
         let columnList = "";
-        for(let columnName of dataHandler._data['statuses']) {
+        for (let columnName of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
                     <div class="board-column-title">${columnName}</div>
@@ -130,7 +131,7 @@ export let dom = {
             <section class="board" id="board-${board.id}">
             <div class="board-header" id="heading${board.id}">
                 <span class="board-title">${board.title}</span> 
-                <button class="board-add">Add Card  <i class="fas fa-plus"></i></button> 
+                <button class="board-add-card" id="${board.id}">Add Card  <i class="fas fa-plus"></i></button> 
                 <button class="board-add" id="addColumnToBoard-${board.id}">Add Column  <i class="fas fa-plus"></i></button> 
                 <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
                     <i class="fas fa-chevron-down"></i>
@@ -284,8 +285,8 @@ export let dom = {
                         let boardBody = document.querySelector(`#collapse${columnData.board_id}`)
                         boardBody.insertAdjacentHTML('beforeend', newColumn);
                         dom.addEventListenerToContainer();
-                    };
-                };
+                    }
+                }
             });
         })
     },
@@ -296,4 +297,49 @@ export let dom = {
             actualDataset.dataset.json = JSON.stringify(data)
         })
     },
+    addNewCard: function () {
+        let cardData = {board_id: this.id};
+        let submit = `
+        <div id="newColumnTitle" class="board-add">
+            <label for="title"></label>
+            <input type="text" id="title" name="title" placeholder="New Card">
+            <button type="submit" id="newCardSubmit">Save</button>
+        </div>
+        `;
+        this.insertAdjacentHTML("afterend", submit);
+        this.remove();
+        document.querySelector('#newCardSubmit').addEventListener('click', (e) => {
+            let cardTitle = dom.getNewTitle();
+            Object.assign(cardData, cardTitle);
+            console.log(cardData)
+            dataHandler.createNewCard(cardData, cardData.board_id, (response) => {
+                console.log(response);
+                let addNewColumn = `
+                        <button class="board-add-card" id="addColumnToBoard-${cardData.board_id}">Add Card <i class="fas fa-plus"></i></button> 
+                    `;
+                document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
+                document.querySelector("#newColumnTitle").remove();
+                document.querySelector(`#addColumnToBoard-${cardData.board_id}`).addEventListener("click", dom.addColumnToBoard);
+
+                let jsonData = JSON.stringify(response)
+                let boardColumn = (document.querySelector(`[data-parent='${cardData.board_id}']`)).children[0]
+                let column = boardColumn.children[1]
+                console.log(column)
+                let newCard = `
+                <div class="card" draggable="true" data-json='${jsonData}'>
+                    <div class="card-remove">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <div class="card-title" data-cardId="${cardData['id']}">${cardData['title']}</div>
+                </div>
+                `;
+                column.insertAdjacentHTML('afterbegin', newCard);
+                dom.addEventListenerToCards();
+            });
+        })
+    },
+    newCardEventListener: function () {
+        let newCardButtons = document.querySelectorAll('.board-add-card');
+        newCardButtons.forEach(newButton => newButton.addEventListener('click', dom.addNewCard));
+    }
 };
