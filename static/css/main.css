@@ -58,6 +58,8 @@ section.board{
     height: 50px;
     background: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
+    /*display: flex;*/
+    /*align-items: center;*/
 }
 
 .board-title{
@@ -66,8 +68,13 @@ section.board{
     font-size: 20px;
     float: left;
 }
+
 .board-title, .board-add, .board-toggle{
     display: inline-block;
+}
+
+.board-add {
+    margin: 13px;
 }
 
 .board-toggle{
