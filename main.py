@@ -46,6 +46,13 @@ def write_new_board():
     return data_handler.write_new_board(req['title'])
 
 
+@app.route("/registration", methods=['POST'])
+@json_response
+def register_new_user():
+    registration = request.get_json()
+    return data_handler.register_new_user(registration)
+
+
 def main():
     app.run(debug=True)
 

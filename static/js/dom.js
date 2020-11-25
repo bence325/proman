@@ -103,7 +103,15 @@ export let dom = {
         </div>`;
         header.insertAdjacentHTML('afterend', form);
         document.querySelector("#sendRegistration").addEventListener('click', () => {
-
+            let registrationData = {
+                username: document.querySelector('#username').value,
+                password: document.querySelector('#password').value
+            }
+            dataHandler._api_post('/registration', registrationData, function (confirmation){
+                document.querySelector("#new-user").remove();
+                let feedback = `<p>${confirmation}</p>`;
+                header.insertAdjacentHTML('afterend', feedback);
+            })
         })
 
     },

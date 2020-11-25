@@ -1,4 +1,5 @@
 import persistence
+import werkzeug.security
 
 
 def get_card_status(status_id):
@@ -35,3 +36,9 @@ def get_statuses():
 
 def write_new_board(title):
     return persistence.write_data_to_boards(title)
+
+
+def register_new_user(data):
+    username = data['username']
+    password_hash = werkzeug.security.generate_password_hash(data['password'])
+    return persistence.add_new_user(username, password_hash)

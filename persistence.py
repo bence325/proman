@@ -70,3 +70,14 @@ def get_boards(force=False):
 def get_cards(force=False):
     return _get_data('cards', force)
 
+
+@database_connection.connection_handler
+def add_new_user(cursor: RealDictCursor, username, password_hash):
+    query = """
+    INSERT INTO users (username, password)
+    VALUES (%(username)s, %(password_hash)s)
+    """
+    params = {'username': username, 'password_hash': password_hash}
+    cursor.execute(query, params)
+    return f"Successful registration as {username}"
+
