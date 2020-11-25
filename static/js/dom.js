@@ -72,7 +72,7 @@ export let dom = {
     },
     addStatusColumns: function (boardBody, boardId) {
         let columnList = "";
-        for(let columnName of dataHandler._data['statuses']) {
+        for (let columnName of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
                     <div class="board-column-title">${columnName}</div>
@@ -87,7 +87,10 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
         dom.addEventListenerToContainer();
-        document.querySelector(`[data-status="${columnName}"]`).addEventListener("click", this.changeColumnTitle);
+        let columnTitles = document.querySelectorAll('.board-column-title');
+        for (let columnTitle of columnTitles) {
+            columnTitle.addEventListener("click", dom.changeColumnTitle);
+        }
     },
     addNewBoardEventListener: function (addNewBoarButton) {
         addNewBoarButton.addEventListener("click", this.createNewBoard);
@@ -234,7 +237,6 @@ export let dom = {
                 document.querySelector("#addNewBoardTitle").remove();
                 document.querySelector(`#heading${boardId}`).insertAdjacentHTML('afterbegin', newBoardTitle);
                 document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild.addEventListener("click", dom.changeBoardTitle);
-                console.log(document.querySelector(`#board-${boardId}`).lastElementChild.firstElementChild);
             });
         })
     },
@@ -284,22 +286,58 @@ export let dom = {
             actualDataset.dataset.json = JSON.stringify(data)
         })
     },
-    },
     changeColumnTitle: function () {
-        let boardId = this.parentNode.parentNode.id.split("-")[1];
+        let boardId = this.parentNode.parentNode.dataset.parent.split("#")[1];
         let oldTitle = this.innerHTML;
-        let head = this.parentNode;
-        this.remove();
-        let submit = `
-            <div id="addNewBoardTitle" class="board-add">
-                <label for="title"></label>
-                <input type="text" id="title" name="title" placeholder="${oldTitle}">
-                <button type="submit" id="newTitleSubmit">Save</button>
-            </div>
+        let linput = `
+                <input type="text" id="title" name="title" class="submit-${boardId}" placeholder="${oldTitle}">
             `;
-        head.insertAdjacentHTML('afterbegin', submit);
-        document.querySelector('#newTitleSubmit').addEventListener('click', (e) => {
-            let newTitle = dom.getNewTitle();
-        };
+        this.insertAdjacentHTML("afterend", linput);
+        this.remove();
+        // not working yet...
+        // window.addEventListener("click", () => {
+        //    dom.backOldTitle(boardId, oldTitle);
+        // })
+        document.querySelector(`.submit-${boardId}`).addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                let newTitle = dom.getNewTitle();
+                let columnIndex = dom.getColumnIndex(boardId, oldTitle);
+                if (newTitle.title !== oldTitle) {
+                    let data = {board_id: boardId, column_index: columnIndex, old_title: oldTitle, new_title: newTitle.title};
+                    dataHandler.changeColumnTitle(data, (response) => {
+                        if (response === "update") {
+                            dom.backOldTitle(boardId, newTitle.title);
+                        } else {
+                            alert(response)
+                            dom.backOldTitle(boardId, oldTitle);
+                        }
+                    });
+                } else {
+                    dom.backOldTitle(boardId, oldTitle);
+                };
+            }
+            if (e.keyCode === 27) {
+                dom.backOldTitle(boardId, oldTitle);
+            }
+            // columnTitle.addEventListener("click", dom.changeColumnTitle)
+        });
+    },
+    backOldTitle: function (boardId, oldTitle) {
+        let title = `
+            <div class="board-column-title">${oldTitle}</div>
+        `;
+        document.querySelector(`.submit-${boardId}`).insertAdjacentHTML("afterend", title);
+        document.querySelector(`.submit-${boardId}`).nextElementSibling.addEventListener("click", dom.changeColumnTitle);
+        document.querySelector(`.submit-${boardId}`).remove();
+    },
+    getColumnIndex: function (boardId, oldTitle) {
+        let columns = document.querySelector(`[data-parent="board-#${boardId}"]`).children;
+        let index = 0;
+        for (let column of columns) {
+            if (column.children[0].tagName === "INPUT") {
+                return index;
+            }
+            index++;
+        }
     }
 };
