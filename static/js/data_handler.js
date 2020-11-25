@@ -89,7 +89,6 @@ export let dataHandler = {
     },
     addColumnToBoard: function (boardData, callback) {
         this._api_post('/add-new-column', boardData, (response) => {
-            console.log(response)
             callback(response);
         });
     }

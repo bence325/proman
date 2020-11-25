@@ -177,15 +177,27 @@ export let dom = {
         document.querySelector('#newTitleSubmit').addEventListener('click', (e) => {
             let columnTitle = dom.getNewTitle();
             Object.assign(columnData, columnTitle);
-            console.log(columnData)
             dataHandler.addColumnToBoard(columnData, (response) => {
-                console.log(response);
-                let addNewColumn = `
-                    <button class="board-add" id="addColumnToBoard-${columnData.board_id}">Add Column  <i class="fas fa-plus"></i></button> 
-                `;
-                document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
-                document.querySelector("#newColumnTitle").remove();
-                document.querySelector(`#addColumnToBoard-${columnData.board_id}`).addEventListener("click", dom.addColumnToBoard);
+                if (response !== "ok") {
+                    alert(response);
+                } else {
+                    let addNewColumn = `
+                        <button class="board-add" id="addColumnToBoard-${columnData.board_id}">Add Column  <i class="fas fa-plus"></i></button> 
+                    `;
+                    document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
+                    document.querySelector("#newColumnTitle").remove();
+                    document.querySelector(`#addColumnToBoard-${columnData.board_id}`).addEventListener("click", dom.addColumnToBoard);
+                    if (document.querySelector(`#heading${columnData.board_id}`).nextElementSibling) {
+                        let newColumn = `
+                            <div class="board-column">
+                                <div class="board-column-title">${columnData.title}</div>
+                                <div class="board-column-content" data-status="${columnData.title}"></div>
+                            </div>
+                            `;
+                        let boardBody = document.querySelector(`#collapse${columnData.board_id}`)
+                        boardBody.insertAdjacentHTML('beforeend', newColumn);
+                    };
+                };
             });
         })
     }
