@@ -36,6 +36,14 @@ def change_board_title(cursor: RealDictCursor, board_id, new_title):
 
 
 @database_connection.connection_handler
+def change_card_status(cursor: RealDictCursor, card_id, new_status_id):
+    cursor.execute(
+        sql.SQL("UPDATE cards SET status_id = {new_status_id} WHERE id = {card_id}").
+            format(card_id=sql.Literal(card_id), new_status_id=sql.Literal(new_status_id))
+    )
+
+
+@database_connection.connection_handler
 def get_statuses_to_board(cursor: RealDictCursor, board_id):
     cursor.execute(
         sql.SQL("SELECT statuses FROM boards WHERE id = {id}").
