@@ -28,12 +28,19 @@ def write_data_to_boards(cursor: RealDictCursor, title):
 
 @database_connection.connection_handler
 def change_board_title(cursor: RealDictCursor, board_id, new_title):
-    print(board_id, new_title)
     cursor.execute(
         sql.SQL("UPDATE boards SET title = {new_title} WHERE id = {id}").
             format(id=sql.Literal(board_id), new_title=sql.Literal(new_title))
     )
     return "ok"
+
+
+@database_connection.connection_handler
+def change_card_status(cursor: RealDictCursor, card_id, new_status_id):
+    cursor.execute(
+        sql.SQL("UPDATE cards SET status_id = {new_status_id} WHERE id = {card_id}").
+            format(card_id=sql.Literal(card_id), new_status_id=sql.Literal(new_status_id))
+    )
 
 
 def _get_data(table, force):
