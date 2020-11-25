@@ -82,7 +82,6 @@ export let dataHandler = {
     // here comes more features
     changeBoardTitle:function (boardId, boardTitle, callback) {
         this._api_post(`/change-board-title/${boardId}`, boardTitle, (response) => {
-            // this._data['boards'] = response;
             callback(response);
         });
     },
