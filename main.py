@@ -94,7 +94,6 @@ def add_new_column():
 @json_response
 def add_new_card(board_id):
     card_data = request.get_json()
-    print(card_data)
     return data_handler.add_new_card(board_id, card_data['title'])
 
 
@@ -103,6 +102,12 @@ def add_new_card(board_id):
 def change_column_title():
     data = request.get_json()
     return data_handler.change_column_title(data)
+
+
+@app.route("/remove-card/<int:card_id>", methods=['DELETE'])
+@json_response
+def remove_card(card_id):
+    return data_handler.remove_card(card_id)
 
 
 def main():

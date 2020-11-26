@@ -203,9 +203,17 @@ def get_all_usernames(cursor: RealDictCursor):
         name_list.append(name['username'])
     return name_list
 
+
 @database_connection.connection_handler
 def get_password_hash(cursor: RealDictCursor, username):
     cursor.execute(sql.SQL("""
     SELECT password FROM users WHERE username = {username}
     """).format(username=sql.Literal(username)))
     return cursor.fetchone()['password']
+
+
+@database_connection.connection_handler
+def remove_card(cursor: RealDictCursor, card_id):
+    cursor.execute(sql.SQL("""
+        DELETE FROM cards WHERE id = {card_id}
+        """).format(card_id=sql.Literal(card_id)))
