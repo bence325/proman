@@ -186,5 +186,5 @@ section.board{
 }
 
 .hidden {
-    visibility: hidden;
+    display: none;
 }
