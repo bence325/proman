@@ -3,9 +3,18 @@ import { dataHandler } from "./data_handler.js";
 
 export let dom = {
     init: function () {
-        // This function should run once, when the page is loaded.
-        this.addNewBoardEventListener(document.querySelector("#newBoard"));
-        this.addRegisterEventListeners();
+        if (sessionStorage.getItem('username')) {
+            let loginButton = document.querySelector("#login");
+            let welcomeUser = document.querySelector("#hello");
+            welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
+            loginButton.removeEventListener('click', dom.login);
+            loginButton.innerHTML = "Log out";
+            loginButton.addEventListener('click', dom.logout);
+        } else {
+            // This function should run once, when the page is loaded.
+            this.addNewBoardEventListener(document.querySelector("#newBoard"));
+            this.addRegisterEventListeners();
+        }
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -142,10 +151,11 @@ export let dom = {
             }
             dataHandler._api_post('/login', loginData, function (success) {
                 if (success) {
+                    sessionStorage.setItem('username', loginData.username);
                     document.querySelector("#log-user").remove();
                     let loginButton = document.querySelector("#login");
                     let welcomeUser = document.querySelector("#hello");
-                    welcomeUser.innerHTML = `Welcome, ${loginData.username}!`;
+                    welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
                     loginButton.removeEventListener('click', dom.login);
                     loginButton.innerHTML = "Log out";
                     loginButton.addEventListener('click', dom.logout);
@@ -161,6 +171,7 @@ export let dom = {
     },
     logout: function () {
         dataHandler._api_get('/logout', function (success) {
+            sessionStorage.clear();
             let logoutButton = document.querySelector('#login');
             logoutButton.removeEventListener('click', dom.logout);
             logoutButton.innerHTML = "Log in";

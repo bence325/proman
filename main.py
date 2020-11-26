@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, make_response, request, jsonify, session
+from flask import Flask, render_template, url_for, make_response, request, jsonify
 from util import json_response
 
 import data_handler
@@ -59,7 +59,6 @@ def register_new_user():
 def login():
     credentials = request.get_json()
     if data_handler.login(credentials):
-        session['username'] = credentials['username']
         return True
     return False
 
@@ -67,7 +66,6 @@ def login():
 @app.route("/logout", methods=['GET'])
 @json_response
 def logout():
-    session.pop('username')
     return True
 
 
