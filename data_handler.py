@@ -44,6 +44,7 @@ def register_new_user(data):
     password_hash = werkzeug.security.generate_password_hash(data['password'])
     return persistence.add_new_user(username, password_hash)
 
+
 def change_board_title(board_id, new_title):
     return persistence.change_board_title(board_id, new_title)
 

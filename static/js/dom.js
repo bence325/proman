@@ -400,17 +400,17 @@ export let dom = {
         document.querySelector('#newCardSubmit').addEventListener('click', (e) => {
             let cardTitle = dom.getNewTitle();
             Object.assign(cardData, cardTitle);
+            console.log(cardData)
             dataHandler.createNewCard(cardData, cardData.board_id, (response) => {
                 let addNewColumn = `
-                        <button class="board-add-card" id="addColumnToBoard-${cardData.board_id}">Add Card <i class="fas fa-plus"></i></button> 
+                        <button class="board-add-card" id="${cardData.board_id}">Add Card <i class="fas fa-plus"></i></button> 
                     `;
                 document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
                 document.querySelector("#newColumnTitle").remove();
-                document.querySelector(`#addColumnToBoard-${cardData.board_id}`).addEventListener("click", dom.addColumnToBoard);
+                document.querySelector(`#heading${cardData.board_id}`).children[1].addEventListener("click", dom.addNewCard);
                 let jsonData = JSON.stringify(response)
                 let boardColumn = (document.querySelector(`[data-parent='${cardData.board_id}']`)).children[0]
                 let column = boardColumn.children[1]
-                console.log(column)
                 let newCard = `
                 <div class="card" draggable="true" data-json='${jsonData}'>
                     <div class="card-remove">

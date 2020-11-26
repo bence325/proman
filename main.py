@@ -94,6 +94,7 @@ def add_new_column():
 @json_response
 def add_new_card(board_id):
     card_data = request.get_json()
+    print(card_data)
     return data_handler.add_new_card(board_id, card_data['title'])
 
 
