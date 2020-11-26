@@ -4,6 +4,7 @@ from util import json_response
 import data_handler
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route("/")
@@ -44,6 +45,28 @@ def get_statuses_to_board(board_id):
 def write_new_board():
     req = request.get_json()
     return data_handler.write_new_board(req['title'])
+
+
+@app.route("/registration", methods=['POST'])
+@json_response
+def register_new_user():
+    registration = request.get_json()
+    return data_handler.register_new_user(registration)
+
+
+@app.route("/login", methods=['POST'])
+@json_response
+def login():
+    credentials = request.get_json()
+    if data_handler.login(credentials):
+        return True
+    return False
+
+
+@app.route("/logout", methods=['GET'])
+@json_response
+def logout():
+    return True
 
 
 @app.route("/change-board-title/<int:board_id>", methods=['POST', 'GET'])
