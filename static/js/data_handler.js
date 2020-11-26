@@ -33,6 +33,12 @@ export let dataHandler = {
                 console.log("Fetch error: " + error);
             });
     },
+    _api_delete: function (url, callback) {
+        fetch(url, {
+            method: 'DELETE'
+        })
+            .then(response => callback(response))
+    },
     init: function () {
     }
     ,
@@ -97,9 +103,14 @@ export let dataHandler = {
             callback(response)
         })
     },
-    changeColumnTitle:function (data, callback) {
+    changeColumnTitle: function (data, callback) {
         this._api_post('/change-column-title', data, (response) => {
             callback(response);
         });
+    },
+    removeCard: function (card_id, callback) {
+        this._api_delete(`/remove-card/${card_id}`, (response) => {
+            callback(response)
+        })
     }
 };

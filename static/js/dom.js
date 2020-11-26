@@ -429,6 +429,7 @@ export let dom = {
                 `;
                 column.insertAdjacentHTML('afterbegin', newCard);
                 dom.addEventListenerToCards();
+                dom.addEventListenerToBins();
             });
         })
     },
@@ -493,8 +494,8 @@ export let dom = {
         }
     },
     displayButtons: function (boardHeader, visible=true) {
-        let addCard = boardHeader.querySelector('.board-add-card')
-        let addColumn = boardHeader.querySelector('.board-add')
+        let addCard = boardHeader.querySelector('.board-add-card');
+        let addColumn = boardHeader.querySelector('.board-add');
         if (visible) {
             addCard.classList.remove('hidden')
             addColumn.classList.remove('hidden')
@@ -504,6 +505,10 @@ export let dom = {
         }
     },
     removeCard: function () {
-        alert('haliho')
+        let card_id = JSON.parse(this.parentElement.dataset.json).id;
+        let card = this.parentElement;
+        dataHandler.removeCard(card_id, () => {
+            card.remove()
+        })
     }
 };

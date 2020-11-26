@@ -109,3 +109,7 @@ def login(credentials):
         return werkzeug.security.check_password_hash(hashed_password, password)
     else:
         return False
+
+
+def remove_card(card_id):
+    persistence.remove_card(card_id)
