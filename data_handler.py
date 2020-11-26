@@ -68,19 +68,19 @@ def add_new_column(columnData):
 
 def change_column_title(data):
     existing_titles = persistence.get_data_from_table("statuses", "title")
+    old_status_id = persistence.get_status_id(data['old_title'])['id']
     for title in existing_titles:
         if data['new_title'] == title['title']:
             new_status_id = persistence.get_status_id(data['new_title'])['id']
-            old_status_id = persistence.get_status_id(data['old_title'])['id']
             board_statuses = persistence.get_specdata_from_table("boards", "statuses", data['board_id'])['statuses']
             if new_status_id in board_statuses:
                 return "Existing column in this table!"
             else:
                 board_statuses[board_statuses.index(old_status_id)] = new_status_id
                 persistence.update_boards_statuses(data['board_id'], board_statuses, change=True)
-                persistence.update_cards_statusid(data['board_id'], new_status_id)
+                persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
                 return "update"
     new_status_id = persistence.add_new_status(data['new_title'])['id']
     persistence.update_boards_statuses(data['board_id'], new_status_id)
-    persistence.update_cards_statusid(data['board_id'], new_status_id)
+    persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
     return "update"

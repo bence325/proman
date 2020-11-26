@@ -114,9 +114,9 @@ def update_boards_statuses(cursor: RealDictCursor, board_id, new_status_id, chan
 
 
 @database_connection.connection_handler
-def update_cards_statusid(cursor: RealDictCursor, board_id, new_status_id):
-    query = """UPDATE cards SET status_id = %(new_status_id)s WHERE board_id = %(board_id)s"""
-    params = {'board_id': board_id, 'new_status_id': new_status_id}
+def update_cards_statusid(cursor: RealDictCursor, board_id, old_status_id, new_status_id):
+    query = """UPDATE cards SET status_id = %(new_status_id)s WHERE board_id = %(board_id)s and status_id = %(old_status_id)s"""
+    params = {'board_id': board_id, 'old_status_id': old_status_id, 'new_status_id': new_status_id}
     cursor.execute(query, params)
 
 
