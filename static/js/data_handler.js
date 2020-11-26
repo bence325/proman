@@ -112,5 +112,10 @@ export let dataHandler = {
         this._api_delete(`/remove-card/${card_id}`, (response) => {
             callback(response)
         })
+    },
+    removeBoard: function (board_id, callback) {
+        this._api_delete(`/remove-board/${board_id}`, (response) => {
+            callback(response)
+        })
     }
 };

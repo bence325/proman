@@ -1,5 +1,5 @@
 // It uses data_handler.js to visualize elements
-import { dataHandler } from "./data_handler.js";
+import {dataHandler} from "./data_handler.js";
 
 export let dom = {
     init: function () {
@@ -29,6 +29,7 @@ export let dom = {
             this.appendNewBoard(board)
         }
         dom.newCardEventListener();
+        dom.addEventListenerToBoardBins();
     },
     loadCards: function () {
         // retrieves cards and makes showCards called
@@ -125,7 +126,7 @@ export let dom = {
                 username: document.querySelector('#username').value,
                 password: document.querySelector('#password').value
             }
-            dataHandler._api_post('/registration', registrationData, function (confirmation){
+            dataHandler._api_post('/registration', registrationData, function (confirmation) {
                 document.querySelector("#new-user").innerHTML = ' ';
                 let feedback = `<p id="confirmation">${confirmation}</p>`;
                 header.insertAdjacentHTML('afterend', feedback);
@@ -153,8 +154,7 @@ export let dom = {
                     sessionStorage.setItem('username', loginData.username);
                     document.querySelector("#log-user").innerHTML = ' ';
                     dom.user_in();
-                }
-                else {
+                } else {
                     let loginForm = document.querySelector("#log-user");
                     let errorMessage = `<p id="error">Wrong username or password!</p>`;
                     loginForm.insertAdjacentHTML("beforeend", errorMessage);
@@ -212,6 +212,8 @@ export let dom = {
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
                 dom.addNewBoardEventListener(document.querySelector("#newBoard"));
                 dom.addEventListenerToCards();
+                dom.addEventListenerToBoardBins();
+                dom.newCardEventListener();
             })
         })
     },
@@ -229,6 +231,9 @@ export let dom = {
                 <button class="board-add hidden" id="addColumnToBoard-${board.id}">Add Column  <i class="fas fa-plus"></i></button> 
                 <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
                     <i class="fas fa-chevron-down"></i>
+                </button>
+                <button class="board-toggle "> 
+                    <div id="board-trash" data-boardId="${board.id}"><i class="fas fa-trash-alt board"></i></div>
                 </button>
             </div>
             </section>
@@ -257,6 +262,10 @@ export let dom = {
     addEventListenerToBins: function () {
         let bins = document.querySelectorAll('.card-remove');
         bins.forEach(bin => bin.addEventListener('click', dom.removeCard));
+    },
+    addEventListenerToBoardBins: function () {
+        let bins = document.querySelectorAll('#board-trash')
+        bins.forEach(bin => bin.addEventListener('click', dom.removeBoard))
     },
     dragStartHandler: function (e) {
         let data = JSON.parse(this.dataset.json);
@@ -455,7 +464,12 @@ export let dom = {
                 let newTitle = dom.getNewTitle();
                 let columnIndex = dom.getColumnIndex(boardId, oldTitle);
                 if (newTitle.title !== oldTitle) {
-                    let data = {board_id: boardId, column_index: columnIndex, old_title: oldTitle, new_title: newTitle.title};
+                    let data = {
+                        board_id: boardId,
+                        column_index: columnIndex,
+                        old_title: oldTitle,
+                        new_title: newTitle.title
+                    };
                     dataHandler.changeColumnTitle(data, (response) => {
                         if (response === "update") {
                             dom.backOldTitle(boardId, newTitle.title);
@@ -467,7 +481,8 @@ export let dom = {
                     });
                 } else {
                     dom.backOldTitle(boardId, oldTitle);
-                };
+                }
+                ;
             }
             if (e.keyCode === 27) {
                 dom.backOldTitle(boardId, oldTitle);
@@ -493,7 +508,7 @@ export let dom = {
             index++;
         }
     },
-    displayButtons: function (boardHeader, visible=true) {
+    displayButtons: function (boardHeader, visible = true) {
         let addCard = boardHeader.querySelector('.board-add-card');
         let addColumn = boardHeader.querySelector('.board-add');
         if (visible) {
@@ -509,6 +524,13 @@ export let dom = {
         let card = this.parentElement;
         dataHandler.removeCard(card_id, () => {
             card.remove()
+        })
+    },
+    removeBoard: function () {
+        let board_id = this.dataset.boardid;
+        let board = document.querySelector(`#board-${board_id}`);
+        dataHandler.removeBoard(board_id, () => {
+                board.remove()
         })
     }
 };

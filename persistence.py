@@ -217,3 +217,14 @@ def remove_card(cursor: RealDictCursor, card_id):
     cursor.execute(sql.SQL("""
         DELETE FROM cards WHERE id = {card_id}
         """).format(card_id=sql.Literal(card_id)))
+
+
+@database_connection.connection_handler
+def remove_board(cursor: RealDictCursor, board_id):
+    cursor.execute(sql.SQL("""
+        DELETE FROM boards WHERE id = {board_id}
+        """).format(board_id=sql.Literal(board_id)))
+
+    cursor.execute(sql.SQL("""
+        DELETE FROM cards WHERE board_id = {board_id}
+        """).format(board_id=sql.Literal(board_id)))
