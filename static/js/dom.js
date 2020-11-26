@@ -53,6 +53,7 @@ export let dom = {
             arrow.classList.remove("fa-chevron-up");
             arrow.classList.add("fa-chevron-down");
         }
+
     },
     showCards: function (board, cards) {
         // shows the cards of a board
@@ -72,6 +73,7 @@ export let dom = {
             column.insertAdjacentHTML('beforeend', newCard);
         }
         dom.addEventListenerToCards();
+        dom.addEventListenerToBins();
     },
     // here comes more features
     loadStatusesToBoard: function (boardBody, boardId) {
@@ -239,18 +241,22 @@ export let dom = {
     addEventListenerToCards: function () {
         let cards = document.querySelectorAll('.card');
         for (let card of cards) {
-            card.addEventListener('dragstart', dom.dragStartHandler)
-            card.addEventListener('dragend', dom.dragEndHandler)
+            card.addEventListener('dragstart', dom.dragStartHandler);
+            card.addEventListener('dragend', dom.dragEndHandler);
         }
     },
     addEventListenerToContainer: function () {
-        let containers = document.querySelectorAll('.board-column')
+        let containers = document.querySelectorAll('.board-column');
         for (let container of containers) {
             container.addEventListener("dragenter", dom.dropZoneEnterHandler);
             container.addEventListener("dragleave", dom.dropZoneLeaveHandler);
             container.addEventListener("dragover", dom.dropZoneOverHandler);
             container.addEventListener("drop", dom.dropZoneDropHandler);
         }
+    },
+    addEventListenerToBins: function () {
+        let bins = document.querySelectorAll('.card-remove');
+        bins.forEach(bin => bin.addEventListener('click', dom.removeCard));
     },
     dragStartHandler: function (e) {
         let data = JSON.parse(this.dataset.json);
@@ -496,5 +502,8 @@ export let dom = {
             addCard.classList.add('hidden')
             addColumn.classList.add('hidden')
         }
+    },
+    removeCard: function () {
+        alert('haliho')
     }
 };
