@@ -160,6 +160,8 @@ export let dom = {
     user_in: function () {
         let loginButton = document.querySelector("#login");
         let welcomeUser = document.querySelector("#hello");
+        let registerButton = document.querySelector('#register');
+        registerButton.remove();
         welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
         loginButton.removeEventListener('click', dom.login);
         loginButton.innerHTML = "Log out";
@@ -173,6 +175,10 @@ export let dom = {
             logoutButton.innerHTML = "Log in";
             logoutButton.addEventListener('click', dom.login);
             document.querySelector('#hello').innerHTML = " ";
+            let registerButton = `<button id="register">Register</button>`
+            let logo = document.querySelector('#logo');
+            logo.insertAdjacentHTML("afterend", registerButton);
+            document.querySelector('#register').addEventListener('click', dom.register);
         })
     },
     createNewBoard: function (e) {
