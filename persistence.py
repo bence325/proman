@@ -120,16 +120,9 @@ def update_cards_statusid(cursor: RealDictCursor, board_id, old_status_id, new_s
     cursor.execute(query, params)
 
 
-@database_connection.connection_handler
-def change_column_title(cursor: RealDictCursor, data):
-    return "ok"
-
-
 def _get_data(table, force):
     """
     Reads defined type of data from file or cache
-    :param data_type: key where the data is stored in cache
-    :param file: relative path to data file
     :param force: if set to True, cache will be ignored
     :return: OrderedDict
     """
@@ -144,6 +137,7 @@ def clear_cache():
 
 
 def get_statuses(force=False):
+    clear_cache()
     return _get_data('statuses', force)
 
 
@@ -153,6 +147,41 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', force)
+
+
+@database_connection.connection_handler
+def add_new_column(cursor: RealDictCursor, columnData):
+    cursor.execute(sql.SQL("SELECT * FROM statuses"))
+    existing_statuses = cursor.fetchall()
+    for status in existing_statuses:
+        if columnData['title'] == status['title']:
+            return "Existing column name!"
+    else:
+        cursor.execute(
+            sql.SQL("INSERT INTO statuses (title) VALUES ({new_status})").
+                format(new_status=sql.Literal(columnData['title']))
+        )
+        cursor.execute(
+            sql.SQL("SELECT id FROM statuses WHERE title = {new_status}").
+                format(new_status=sql.Literal(columnData['title']))
+        )
+        new_status_id = cursor.fetchone()
+        query = """
+                UPDATE boards SET statuses = array_append(statuses, %(new_status_id)s) WHERE id = %(board_id)s"""
+        params = {'board_id': columnData['board_id'], 'new_status_id': new_status_id['id']}
+        cursor.execute(query, params)
+    return "ok"
+
+
+@database_connection.connection_handler
+def add_new_card(cursor: RealDictCursor, board_id, title):
+    query = """
+           INSERT INTO cards (board_id, title, status_id, order_cards)
+           VALUES (%(board_id)s, %(title)s, 0, 0)
+           RETURNING id, board_id, title, status_id, order_cards"""
+    params = {'board_id': board_id, 'title': title}
+    cursor.execute(query, params)
+    return cursor.fetchone()
 
 
 @database_connection.connection_handler

@@ -90,6 +90,14 @@ def add_new_column():
     return data_handler.add_new_column(columnData)
 
 
+@app.route("/add-new-card/<int:board_id>", methods=['POST', 'GET'])
+@json_response
+def add_new_card(board_id):
+    card_data = request.get_json()
+    print(card_data)
+    return data_handler.add_new_card(board_id, card_data['title'])
+
+
 @app.route("/change-column-title", methods=['POST', 'GET'])
 @json_response
 def change_column_title():

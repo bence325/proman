@@ -44,16 +44,22 @@ def register_new_user(data):
     password_hash = werkzeug.security.generate_password_hash(data['password'])
     return persistence.add_new_user(username, password_hash)
 
+
 def change_board_title(board_id, new_title):
     return persistence.change_board_title(board_id, new_title)
 
 
 def change_card_status(card_id, new_card_status):
     statuses = persistence.get_statuses()
+    new_status = None
     for status in statuses:
         if status['title'] == new_card_status:
             new_status = status['id']
     return persistence.change_card_status(card_id, new_status)
+
+
+def add_new_card(board_id, title):
+    return persistence.add_new_card(board_id, title)
 
 
 def add_new_column(columnData):
@@ -87,7 +93,9 @@ def change_column_title(data):
                 persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
                 return "update"
     new_status_id = persistence.add_new_status(data['new_title'])['id']
-    persistence.update_boards_statuses(data['board_id'], new_status_id)
+    board_statuses = persistence.get_specdata_from_table("boards", "statuses", data['board_id'])['statuses']
+    board_statuses[board_statuses.index(old_status_id)] = new_status_id
+    persistence.update_boards_statuses(data['board_id'], board_statuses, change=True)
     persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
     return "update"
 
