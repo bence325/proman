@@ -86,6 +86,6 @@ def change_column_title(data):
                 persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
                 return "update"
     new_status_id = persistence.add_new_status(data['new_title'])['id']
-    persistence.update_boards_statuses(data['board_id'], new_status_id)
+    persistence.update_boards_statuses(data['board_id'], new_status_id, change=True)
     persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
     return "update"

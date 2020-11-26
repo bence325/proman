@@ -123,8 +123,6 @@ def update_cards_statusid(cursor: RealDictCursor, board_id, old_status_id, new_s
 def _get_data(table, force):
     """
     Reads defined type of data from file or cache
-    :param data_type: key where the data is stored in cache
-    :param file: relative path to data file
     :param force: if set to True, cache will be ignored
     :return: OrderedDict
     """

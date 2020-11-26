@@ -68,6 +68,8 @@ export let dom = {
     // here comes more features
     loadStatusesToBoard: function (boardBody, boardId) {
         dataHandler.getStatusesToBoard(boardId, function (statuses) {
+            console.log(statuses)
+            console.log(dataHandler._data['statuses'])
             dom.addStatusColumns(boardBody, boardId);
         });
     },
@@ -299,7 +301,6 @@ export let dom = {
         let cardId = data.id;
         dataHandler.changeCardTitle(cardId, newStatus, () => {
             data.status_id = actualDataset.parentNode.dataset.status
-            // data.status_id = newStatus
             console.log(newStatus)
             console.log(data)
             actualDataset.dataset.json = JSON.stringify(data)
