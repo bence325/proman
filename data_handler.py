@@ -1,4 +1,5 @@
 import persistence
+import werkzeug.security
 
 
 def get_card_status(status_id):
@@ -37,6 +38,11 @@ def get_statuses_to_board(board_id):
 def write_new_board(title):
     return persistence.write_data_to_boards(title)
 
+
+def register_new_user(data):
+    username = data['username']
+    password_hash = werkzeug.security.generate_password_hash(data['password'])
+    return persistence.add_new_user(username, password_hash)
 
 def change_board_title(board_id, new_title):
     return persistence.change_board_title(board_id, new_title)
@@ -84,3 +90,14 @@ def change_column_title(data):
     persistence.update_boards_statuses(data['board_id'], new_status_id)
     persistence.update_cards_statusid(data['board_id'], old_status_id, new_status_id)
     return "update"
+
+
+def login(credentials):
+    username = credentials['username']
+    password = credentials['password']
+    usernames = persistence.get_all_usernames()
+    if username in usernames:
+        hashed_password = persistence.get_password_hash(username)
+        return werkzeug.security.check_password_hash(hashed_password, password)
+    else:
+        return False

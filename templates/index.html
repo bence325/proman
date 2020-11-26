@@ -23,13 +23,17 @@
         <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
     </head>
     <body>
-
-    <div id="header">
-        <h1>ProMan</h1>
+    <nav id="header">
+        <h1 id="logo">ProMan</h1>
+        <button id="register">Register</button>
+        <button id="login">Log in</button>
+        <div id="hello"> </div>
+        <div> </div>
         <div> </div>
         <button id="newBoard" class="board-toggle data-toggle">Add Board <i class="fas fa-plus"></i></button>
-    </div>
-
+    </nav>
+    <div id="log-user"></div>
+    <div id="new-user"></div>
     <div id="boards">Boards are loading...</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

@@ -3,8 +3,13 @@ import { dataHandler } from "./data_handler.js";
 
 export let dom = {
     init: function () {
-        // This function should run once, when the page is loaded.
-        this.addNewBoardEventListener(document.querySelector("#newBoard"));
+        if (sessionStorage.getItem('username')) {
+            dom.user_in();
+        } else {
+            // This function should run once, when the page is loaded.
+            this.addNewBoardEventListener(document.querySelector("#newBoard"));
+            this.addRegisterEventListeners();
+        }
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -17,8 +22,8 @@ export let dom = {
         // it adds necessary event listeners also
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.innerHTML = "";
-        let boardContainer = document.querySelector('#boards')
-        boardContainer.classList.add('board-container', 'p-2')
+        let boardContainer = document.querySelector('#boards');
+        boardContainer.classList.add('board-container', 'p-2');
 
         for (let board of boards) {
             this.appendNewBoard(board)
@@ -94,6 +99,87 @@ export let dom = {
     },
     addNewBoardEventListener: function (addNewBoarButton) {
         addNewBoarButton.addEventListener("click", this.createNewBoard);
+    },
+    addRegisterEventListeners: function () {
+        document.querySelector("#register").addEventListener("click", this.register);
+        document.querySelector("#login").addEventListener("click", this.login);
+    },
+    register: function () {
+        let form = document.querySelector('#log-user');
+        form.innerHTML = `
+        <div id="new-user">
+            <p><label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="choose a name" required></p>
+            <p><label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="choose a password" required></p>
+            <p><button type="submit" id="sendRegistration">Submit</button></p>
+        </div>`;
+        document.querySelector("#sendRegistration").addEventListener('click', () => {
+            let registrationData = {
+                username: document.querySelector('#username').value,
+                password: document.querySelector('#password').value
+            }
+            dataHandler._api_post('/registration', registrationData, function (confirmation){
+                document.querySelector("#new-user").innerHTML = ' ';
+                let feedback = `<p id="confirmation">${confirmation}</p>`;
+                header.insertAdjacentHTML('afterend', feedback);
+                setTimeout(() => document.querySelector("#confirmation").remove(), 5000);
+            })
+        })
+    },
+    login: function () {
+        let form = document.querySelector('#log-user');
+        form.innerHTML = `
+        <div id="log-user">
+            <p><label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Your username" required></p>
+            <p><label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Your password" required></p>
+            <p><button type="submit" id="sendLoginData">Submit</button></p>
+        </div>`;
+        document.querySelector("#sendLoginData").addEventListener('click', () => {
+            let loginData = {
+                username: document.querySelector('#username').value,
+                password: document.querySelector('#password').value
+            }
+            dataHandler._api_post('/login', loginData, function (success) {
+                if (success) {
+                    sessionStorage.setItem('username', loginData.username);
+                    document.querySelector("#log-user").innerHTML = ' ';
+                    dom.user_in();
+                }
+                else {
+                    let loginForm = document.querySelector("#log-user");
+                    let errorMessage = `<p id="error">Wrong username or password!</p>`;
+                    loginForm.insertAdjacentHTML("beforeend", errorMessage);
+                    setTimeout(() => document.querySelector("#error").remove(), 5000);
+                }
+            })
+        })
+    },
+    user_in: function () {
+        let loginButton = document.querySelector("#login");
+        let welcomeUser = document.querySelector("#hello");
+        let registerButton = document.querySelector('#register');
+        registerButton.remove();
+        welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
+        loginButton.removeEventListener('click', dom.login);
+        loginButton.innerHTML = "Log out";
+        loginButton.addEventListener('click', dom.logout);
+    },
+    logout: function () {
+        dataHandler._api_get('/logout', function (success) {
+            sessionStorage.clear();
+            let logoutButton = document.querySelector('#login');
+            logoutButton.removeEventListener('click', dom.logout);
+            logoutButton.innerHTML = "Log in";
+            logoutButton.addEventListener('click', dom.login);
+            document.querySelector('#hello').innerHTML = " ";
+            let registerButton = `<button id="register">Register</button>`
+            let logo = document.querySelector('#logo');
+            logo.insertAdjacentHTML("afterend", registerButton);
+            document.querySelector('#register').addEventListener('click', dom.register);
+        })
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");

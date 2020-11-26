@@ -153,3 +153,30 @@ def get_boards(force=False):
 
 def get_cards(force=False):
     return _get_data('cards', force)
+
+
+@database_connection.connection_handler
+def add_new_user(cursor: RealDictCursor, username, password_hash):
+    query = """
+    INSERT INTO users (username, password)
+    VALUES ({username}, {password_hash})
+    """
+    cursor.execute(sql.SQL(query).format(username=sql.Literal(username), password_hash=sql.Literal(password_hash)))
+    return f"Successful registration as {username}"
+
+
+@database_connection.connection_handler
+def get_all_usernames(cursor: RealDictCursor):
+    cursor.execute(sql.SQL("SELECT username FROM users"))
+    name_list = []
+    usernames = cursor.fetchall()
+    for name in usernames:
+        name_list.append(name['username'])
+    return name_list
+
+@database_connection.connection_handler
+def get_password_hash(cursor: RealDictCursor, username):
+    cursor.execute(sql.SQL("""
+    SELECT password FROM users WHERE username = {username}
+    """).format(username=sql.Literal(username)))
+    return cursor.fetchone()['password']
