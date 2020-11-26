@@ -58,8 +58,9 @@ def change_card_status(card_id, new_card_status):
     return persistence.change_card_status(card_id, new_status)
 
 
-def add_new_card(board_id, title):
-    return persistence.add_new_card(board_id, title)
+def add_new_card(board_id, title, status):
+    status_id = persistence.get_status_id(status)['id']
+    return persistence.add_new_card(board_id, title, status_id)
 
 
 def add_new_column(columnData):
@@ -116,5 +117,4 @@ def remove_card(card_id):
 
 
 def remove_board(board_id):
-    print(board_id)
     persistence.remove_board(board_id)

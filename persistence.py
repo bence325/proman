@@ -174,12 +174,12 @@ def add_new_column(cursor: RealDictCursor, columnData):
 
 
 @database_connection.connection_handler
-def add_new_card(cursor: RealDictCursor, board_id, title):
+def add_new_card(cursor: RealDictCursor, board_id, title, status_id):
     query = """
            INSERT INTO cards (board_id, title, status_id, order_cards)
-           VALUES (%(board_id)s, %(title)s, 0, 0)
+           VALUES (%(board_id)s, %(title)s, %(status_id)s, 0)
            RETURNING id, board_id, title, status_id, order_cards"""
-    params = {'board_id': board_id, 'title': title}
+    params = {'board_id': board_id, 'title': title, 'status_id': status_id}
     cursor.execute(query, params)
     return cursor.fetchone()
 

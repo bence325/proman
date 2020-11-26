@@ -229,11 +229,11 @@ export let dom = {
                 <span class="board-title">${board.title}</span> 
                 <button class="board-add-card hidden" id="${board.id}">Add Card  <i class="fas fa-plus"></i></button> 
                 <button class="board-add hidden" id="addColumnToBoard-${board.id}">Add Column  <i class="fas fa-plus"></i></button> 
-                <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
-                    <i class="fas fa-chevron-down"></i>
-                </button>
                 <button class="board-toggle "> 
                     <div id="board-trash" data-boardId="${board.id}"><i class="fas fa-trash-alt board"></i></div>
+                </button>
+                <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
+                    <i class="fas fa-chevron-down"></i>
                 </button>
             </div>
             </section>
@@ -415,6 +415,9 @@ export let dom = {
         `;
         this.insertAdjacentHTML("afterend", submit);
         this.remove();
+        let parent = document.querySelector(`[data-parent="${cardData.board_id}"]`)
+        let status = parent.children[0].children[1].dataset.status
+        Object.assign(cardData, {status})
         document.querySelector('#newCardSubmit').addEventListener('click', (e) => {
             let cardTitle = dom.getNewTitle();
             Object.assign(cardData, cardTitle);
@@ -425,6 +428,7 @@ export let dom = {
                 document.querySelector("#newColumnTitle").insertAdjacentHTML("beforebegin", addNewColumn);
                 document.querySelector("#newColumnTitle").remove();
                 document.querySelector(`#heading${cardData.board_id}`).children[1].addEventListener("click", dom.addNewCard);
+                response.status_id = cardData.status
                 let jsonData = JSON.stringify(response)
                 let boardColumn = (document.querySelector(`[data-parent='${cardData.board_id}']`)).children[0]
                 let column = boardColumn.children[1]
