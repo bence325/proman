@@ -44,6 +44,7 @@ def change_board_title(board_id, new_title):
 
 def change_card_status(card_id, new_card_status):
     statuses = persistence.get_statuses()
+    new_status = None
     for status in statuses:
         if status['title'] == new_card_status:
             new_status = status['id']

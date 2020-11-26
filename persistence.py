@@ -120,11 +120,6 @@ def update_cards_statusid(cursor: RealDictCursor, board_id, old_status_id, new_s
     cursor.execute(query, params)
 
 
-@database_connection.connection_handler
-def change_column_title(cursor: RealDictCursor, data):
-    return "ok"
-
-
 def _get_data(table, force):
     """
     Reads defined type of data from file or cache
@@ -144,6 +139,7 @@ def clear_cache():
 
 
 def get_statuses(force=False):
+    clear_cache()
     return _get_data('statuses', force)
 
 

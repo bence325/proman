@@ -173,6 +173,7 @@ export let dom = {
         let actualDataset = this
         let data = JSON.parse(this.dataset.json);
         let newStatus = this.parentNode.dataset.status
+        console.log(data)
         console.log(newStatus)
         dom.setDropZonesHighlight(data.board_id, false)
         this.classList.remove('dragged');
@@ -298,6 +299,9 @@ export let dom = {
         let cardId = data.id;
         dataHandler.changeCardTitle(cardId, newStatus, () => {
             data.status_id = actualDataset.parentNode.dataset.status
+            // data.status_id = newStatus
+            console.log(newStatus)
+            console.log(data)
             actualDataset.dataset.json = JSON.stringify(data)
         })
     },
