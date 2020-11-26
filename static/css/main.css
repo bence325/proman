@@ -184,3 +184,7 @@ section.board{
     background: #ffc6c6;
     border: 2px solid #931414;
 }
+
+.hidden {
+    visibility: hidden;
+}
