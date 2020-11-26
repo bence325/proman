@@ -33,11 +33,11 @@ export let dom = {
     loadCards: function () {
         // retrieves cards and makes showCards called
         let boardBody = this.parentNode.parentNode;
-        let addCard = boardBody.querySelector('.board-header').querySelector('.board-add-card')
+        let boardHeader = boardBody.querySelector('.board-header')
         let boardId = boardBody.id.split("-")[1];
         let boardColumns = boardBody.querySelector(".board-columns");
         let arrow = boardBody.querySelector(".fas");
-        addCard.classList.remove('hidden')
+        dom.displayButtons(boardHeader)
         if (!boardColumns) {
             dom.loadStatusesToBoard(boardBody, boardId);
             dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards) {
@@ -48,7 +48,7 @@ export let dom = {
             arrow.classList.remove("fa-chevron-down");
             arrow.classList.add("fa-chevron-up");
         } else {
-            addCard.classList.add('hidden')
+            dom.displayButtons(boardHeader, false)
             boardColumns.remove();
             arrow.classList.remove("fa-chevron-up");
             arrow.classList.add("fa-chevron-down");
@@ -224,7 +224,7 @@ export let dom = {
             <div class="board-header" id="heading${board.id}">
                 <span class="board-title">${board.title}</span> 
                 <button class="board-add-card hidden" id="${board.id}">Add Card  <i class="fas fa-plus"></i></button> 
-                <button class="board-add" id="addColumnToBoard-${board.id}">Add Column  <i class="fas fa-plus"></i></button> 
+                <button class="board-add hidden" id="addColumnToBoard-${board.id}">Add Column  <i class="fas fa-plus"></i></button> 
                 <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -484,6 +484,17 @@ export let dom = {
                 return index;
             }
             index++;
+        }
+    },
+    displayButtons: function (boardHeader, visible=true) {
+        let addCard = boardHeader.querySelector('.board-add-card')
+        let addColumn = boardHeader.querySelector('.board-add')
+        if (visible) {
+            addCard.classList.remove('hidden')
+            addColumn.classList.remove('hidden')
+        } else {
+            addCard.classList.add('hidden')
+            addColumn.classList.add('hidden')
         }
     }
 };
