@@ -405,6 +405,7 @@ export let dom = {
                     dataHandler.changeColumnTitle(data, (response) => {
                         if (response === "update") {
                             dom.backOldTitle(boardId, newTitle.title);
+                            document.querySelector(`[data-status="${oldTitle}"]`).setAttribute("data-status", newTitle.title);
                         } else {
                             alert(response)
                             dom.backOldTitle(boardId, oldTitle);
