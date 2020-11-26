@@ -110,6 +110,13 @@ def remove_card(card_id):
     return data_handler.remove_card(card_id)
 
 
+@app.route("/remove-board/<int:board_id>", methods=['DELETE'])
+@json_response
+def remove_board(board_id):
+    print(board_id)
+    return data_handler.remove_board(board_id)
+
+
 def main():
     app.run(debug=True)
 

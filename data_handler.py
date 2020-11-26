@@ -113,3 +113,8 @@ def login(credentials):
 
 def remove_card(card_id):
     persistence.remove_card(card_id)
+
+
+def remove_board(board_id):
+    print(board_id)
+    persistence.remove_board(board_id)
