@@ -93,5 +93,10 @@ export let dataHandler = {
         this._api_post(`/change-card-status/${cardId}`, newStatus, (response) => {
             callback(response)
         })
+    },
+    changeColumnTitle:function (data, callback) {
+        this._api_post('/change-column-title', data, (response) => {
+            callback(response);
+        });
     }
 };
