@@ -74,6 +74,13 @@ def add_new_card(board_id):
     return data_handler.add_new_card(board_id, card_data['title'])
 
 
+@app.route("/change-column-title", methods=['POST', 'GET'])
+@json_response
+def change_column_title():
+    data = request.get_json()
+    return data_handler.change_column_title(data)
+
+
 def main():
     app.run(debug=True)
 

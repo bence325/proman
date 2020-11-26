@@ -16,6 +16,30 @@ def _get_data_from_tables(cursor: RealDictCursor, table):
 
 
 @database_connection.connection_handler
+def get_data_from_table(cursor: RealDictCursor, table, column):
+    if column:
+        cursor.execute(
+            sql.SQL("SELECT {column} FROM {table}").
+                format(table=sql.Identifier(table), column=sql.Identifier(column))
+        )
+    else:
+        cursor.execute(
+            sql.SQL("SELECT * FROM {table}").
+                format(table=sql.Identifier(table))
+        )
+    return cursor.fetchall()
+
+
+@database_connection.connection_handler
+def get_specdata_from_table(cursor: RealDictCursor, table, column, board_id):
+    cursor.execute(
+        sql.SQL("SELECT {column} FROM {table} WHERE id = {id}").
+            format(table=sql.Identifier(table), column=sql.Identifier(column), id=sql.Literal(board_id))
+    )
+    return cursor.fetchone()
+
+
+@database_connection.connection_handler
 def write_data_to_boards(cursor: RealDictCursor, title):
     query = """
         INSERT INTO boards (title)
@@ -58,6 +82,47 @@ def get_statuses_to_board(cursor: RealDictCursor, board_id):
         )
         result.append(cursor.fetchone()['title'])
     return result
+
+
+@database_connection.connection_handler
+def add_new_status(cursor: RealDictCursor, title):
+    cursor.execute(
+        sql.SQL("INSERT INTO statuses (title) VALUES ({new_status}) RETURNING id").
+            format(new_status=sql.Literal(title))
+    )
+    return cursor.fetchone()
+
+
+@database_connection.connection_handler
+def get_status_id(cursor: RealDictCursor, title):
+    cursor.execute(
+        sql.SQL("SELECT id FROM statuses WHERE title = {new_status}").
+            format(new_status=sql.Literal(title))
+    )
+    return cursor.fetchone()
+
+
+@database_connection.connection_handler
+def update_boards_statuses(cursor: RealDictCursor, board_id, new_status_id, change=False):
+    if change:
+        query = """UPDATE boards SET statuses = %(new_status_id)s WHERE id = %(board_id)s"""
+        params = {'board_id': board_id, 'new_status_id': new_status_id}
+    else:
+        query = """UPDATE boards SET statuses = array_append(statuses, %(new_status_id)s) WHERE id = %(board_id)s"""
+        params = {'board_id': board_id, 'new_status_id': new_status_id}
+    cursor.execute(query, params)
+
+
+@database_connection.connection_handler
+def update_cards_statusid(cursor: RealDictCursor, board_id, old_status_id, new_status_id):
+    query = """UPDATE cards SET status_id = %(new_status_id)s WHERE board_id = %(board_id)s and status_id = %(old_status_id)s"""
+    params = {'board_id': board_id, 'old_status_id': old_status_id, 'new_status_id': new_status_id}
+    cursor.execute(query, params)
+
+
+@database_connection.connection_handler
+def change_column_title(cursor: RealDictCursor, data):
+    return "ok"
 
 
 def _get_data(table, force):

@@ -1,5 +1,5 @@
 // It uses data_handler.js to visualize elements
-import {dataHandler} from "./data_handler.js";
+import { dataHandler } from "./data_handler.js";
 
 export let dom = {
     init: function () {
@@ -35,7 +35,6 @@ export let dom = {
             dom.loadStatusesToBoard(boardBody, boardId);
             dataHandler.getCardsByBoardId(parseInt(boardBody.id.split("-")[1]), function (cards) {
                 if (cards) {
-                    // console.log(cards)
                     dom.showCards(boardBody, cards);
                 }
             });
@@ -89,6 +88,10 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
         dom.addEventListenerToContainer();
+        let columnTitles = document.querySelectorAll('.board-column-title');
+        for (let columnTitle of columnTitles) {
+            columnTitle.addEventListener("click", dom.changeColumnTitle);
+        }
     },
     addNewBoardEventListener: function (addNewBoarButton) {
         addNewBoarButton.addEventListener("click", this.createNewBoard);
@@ -284,6 +287,7 @@ export let dom = {
                         let boardBody = document.querySelector(`#collapse${columnData.board_id}`)
                         boardBody.insertAdjacentHTML('beforeend', newColumn);
                         dom.addEventListenerToContainer();
+                        document.querySelector(`[data-status="${columnData.title}"`).previousElementSibling.addEventListener("click", dom.changeColumnTitle);
                     }
                 }
             });
@@ -337,5 +341,60 @@ export let dom = {
     newCardEventListener: function () {
         let newCardButtons = document.querySelectorAll('.board-add-card');
         newCardButtons.forEach(newButton => newButton.addEventListener('click', dom.addNewCard));
+    },
+    changeColumnTitle: function () {
+        let boardId = this.parentNode.parentNode.dataset.parent;
+        let oldTitle = this.innerHTML;
+        let linput = `
+                <input type="text" id="title" name="title" class="submit-${boardId}" placeholder="${oldTitle}">
+            `;
+        this.insertAdjacentHTML("afterend", linput);
+        this.remove();
+        // not working yet....
+        // document.querySelector(".board-header").addEventListener("click", () => {
+        //     console.log('1')
+        //     dom.backOldTitle(boardId, oldTitle);
+        // })
+        document.querySelector(`.submit-${boardId}`).addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                let newTitle = dom.getNewTitle();
+                let columnIndex = dom.getColumnIndex(boardId, oldTitle);
+                if (newTitle.title !== oldTitle) {
+                    let data = {board_id: boardId, column_index: columnIndex, old_title: oldTitle, new_title: newTitle.title};
+                    dataHandler.changeColumnTitle(data, (response) => {
+                        if (response === "update") {
+                            dom.backOldTitle(boardId, newTitle.title);
+                        } else {
+                            alert(response)
+                            dom.backOldTitle(boardId, oldTitle);
+                        }
+                    });
+                } else {
+                    dom.backOldTitle(boardId, oldTitle);
+                };
+            }
+            if (e.keyCode === 27) {
+                dom.backOldTitle(boardId, oldTitle);
+            }
+            // columnTitle.addEventListener("click", dom.changeColumnTitle)
+        });
+    },
+    backOldTitle: function (boardId, oldTitle) {
+        let title = `
+            <div class="board-column-title">${oldTitle}</div>
+        `;
+        document.querySelector(`.submit-${boardId}`).insertAdjacentHTML("afterend", title);
+        document.querySelector(`.submit-${boardId}`).nextElementSibling.addEventListener("click", dom.changeColumnTitle);
+        document.querySelector(`.submit-${boardId}`).remove();
+    },
+    getColumnIndex: function (boardId, oldTitle) {
+        let columns = document.querySelector(`[data-parent="${boardId}"]`).children;
+        let index = 0;
+        for (let column of columns) {
+            if (column.children[0].tagName === "INPUT") {
+                return index;
+            }
+            index++;
+        }
     }
 };
