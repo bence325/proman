@@ -173,6 +173,7 @@ export let dom = {
         let actualDataset = this
         let data = JSON.parse(this.dataset.json);
         let newStatus = this.parentNode.dataset.status
+        console.log(newStatus)
         dom.setDropZonesHighlight(data.board_id, false)
         this.classList.remove('dragged');
         this.classList.remove('drag-feedback');
