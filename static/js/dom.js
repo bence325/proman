@@ -167,6 +167,9 @@ export let dom = {
         let loginButton = document.querySelector("#login");
         let welcomeUser = document.querySelector("#hello");
         let registerButton = document.querySelector('#register');
+        let privateBoardCreator = document.querySelector('#newPrivateBoard');
+        privateBoardCreator.classList.remove('hidden');
+        privateBoardCreator.classList.add('board-toggle');
         registerButton.remove();
         welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
         loginButton.removeEventListener('click', dom.login);
@@ -189,11 +192,7 @@ export let dom = {
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");
-        if (e.target.localName === "button") {
-            e.target.remove();
-        } else {
-            e.target.parentNode.remove();
-        }
+        e.currentTarget.remove();
         let submit = `
         <div id="addNewBoard" class="board-toggle">
             <label for="title">Board title</label>
