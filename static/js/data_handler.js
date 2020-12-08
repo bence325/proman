@@ -52,8 +52,18 @@ export let dataHandler = {
             callback(response);
         });
     },
+    get_privateBoards: function (username, callback) {
+        this._api_post('/get-private-boards', username, (response) => {
+            this._data['boards'] = response;
+            console.log(response);
+            callback(response);
+        })
+    },
     getBoard: function (boardId, callback) {
         // the board is retrieved and then the callback function is called with the board
+    },
+    clear_boards: function () {
+        this._data = {};
     },
     getStatusesToBoard: function (boardId, callback) {
         // the statuses are retrieved and then the callback function is called with the statuses

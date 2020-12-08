@@ -12,12 +12,17 @@ def get_card_status(status_id):
     return next((status['title'] for status in statuses if status['id'] == status_id), 'Unknown')
 
 
-def get_boards():
+def get_public_boards():
     """
-    Gather all boards
+    Gather all public boards
     :return:
     """
     return persistence.get_boards(force=True)
+
+
+def get_private_boards(username):
+    user_id = persistence.get_id_from_username(username)
+    return persistence.get_boards(force=True, user_id=user_id)
 
 
 def get_cards_for_board(board_id):

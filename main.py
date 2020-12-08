@@ -19,9 +19,16 @@ def index():
 @json_response
 def get_boards():
     """
-    All the boards
+    All the public boards
     """
-    return data_handler.get_boards()
+    return data_handler.get_public_boards()
+
+
+@app.route('/get-private-boards', methods=['POST'])
+@json_response
+def get_private_boards():
+    user = request.get_json()
+    return data_handler.get_private_boards(user)
 
 
 @app.route("/get-cards/<int:board_id>")

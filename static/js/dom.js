@@ -175,10 +175,14 @@ export let dom = {
         privateBoardCreator.classList.add('board-toggle');
         privateBoardCreator.addEventListener('click', dom.createPrivateBoard);
         registerButton.remove();
+        let username = sessionStorage.getItem('username');
         welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
         loginButton.removeEventListener('click', dom.login);
         loginButton.innerHTML = "Log out";
         loginButton.addEventListener('click', dom.logout);
+        dataHandler.get_privateBoards(username, function (boards) {
+            dom.showBoards(boards);
+        });
     },
     logout: function () {
         dataHandler._api_get('/logout', function (success) {
@@ -195,6 +199,8 @@ export let dom = {
             let logo = document.querySelector('#logo');
             logo.insertAdjacentHTML("afterend", registerButton);
             document.querySelector('#register').addEventListener('click', dom.register);
+            dataHandler.clear_boards();
+            dom.loadBoards();
         })
     },
     createNewBoard: function (e) {
