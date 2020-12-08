@@ -55,7 +55,6 @@ export let dataHandler = {
     get_privateBoards: function (username, callback) {
         this._api_post('/get-private-boards', username, (response) => {
             this._data['boards'] = response;
-            console.log(response);
             callback(response);
         })
     },

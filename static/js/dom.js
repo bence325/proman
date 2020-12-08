@@ -3,11 +3,11 @@ import {dataHandler} from "./data_handler.js";
 
 export let dom = {
     init: function () {
+        this.addNewBoardEventListener(document.querySelector("#newBoard"));
         if (sessionStorage.getItem('username')) {
             dom.user_in();
         } else {
             // This function should run once, when the page is loaded.
-            this.addNewBoardEventListener(document.querySelector("#newBoard"));
             this.addRegisterEventListeners();
         }
     },
@@ -177,6 +177,7 @@ export let dom = {
         registerButton.remove();
         let username = sessionStorage.getItem('username');
         welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
+        welcomeUser.classList.remove('hidden');
         loginButton.removeEventListener('click', dom.login);
         loginButton.innerHTML = "Log out";
         loginButton.addEventListener('click', dom.logout);
@@ -194,7 +195,7 @@ export let dom = {
             logoutButton.removeEventListener('click', dom.logout);
             logoutButton.innerHTML = "Log in";
             logoutButton.addEventListener('click', dom.login);
-            document.querySelector('#hello').innerHTML = " ";
+            document.querySelector('#hello').classList.add('hidden');
             let registerButton = `<button id="register">Register</button>`
             let logo = document.querySelector('#logo');
             logo.insertAdjacentHTML("afterend", registerButton);
@@ -206,6 +207,10 @@ export let dom = {
     createNewBoard: function (e) {
         let header = document.querySelector("#header");
         e.currentTarget.remove();
+        if (sessionStorage.getItem('username')) {
+            let privateBoardCreator = document.querySelector('#newPrivateBoard');
+            privateBoardCreator.classList.add('hidden');
+        }
         let submit = `
         <div id="addNewBoard" class="board-toggle">
             <label for="title">Board title</label>
@@ -222,6 +227,10 @@ export let dom = {
                     <button id="newBoard" class="board-toggle data-toggle">Add Board  <i class="fas fa-plus"></i></button>
                 `;
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
+                if (sessionStorage.getItem('username')) {
+                    let privateBoardCreator = document.querySelector('#newPrivateBoard');
+                    privateBoardCreator.classList.remove('hidden');
+                }
                 dom.addNewBoardEventListener(document.querySelector("#newBoard"));
                 dom.addEventListenerToCards();
                 dom.addEventListenerToBoardBins();
@@ -231,8 +240,9 @@ export let dom = {
     },
     createPrivateBoard: function (e) {
         let header = document.querySelector("#header");
-        e.currentTarget.classList.remove('board-toggle')
+        let publicBoardButton = document.querySelector('#newBoard');
         e.currentTarget.classList.add('hidden');
+        publicBoardButton.classList.add('hidden');
         let submit = `
         <div id="addNewBoard" class="board-toggle">
             <label for="title">Board title (private)</label>
@@ -244,14 +254,16 @@ export let dom = {
         document.querySelector('#newBoardSubmit').addEventListener('click', () => {
             let privateBoardData = {
                 'username': sessionStorage.getItem('username'),
-                'title': document.querySelector('#title').value}
+                'title': document.querySelector('#title').value + ' (private)'}
             dataHandler.createNewPrivateBoard(privateBoardData, (board) => {
                 dom.appendNewBoard(board);
                 document.querySelector("#addNewBoard").remove();
                 let privateBoardCreator = document.querySelector('#newPrivateBoard');
                 privateBoardCreator.classList.remove('hidden');
                 privateBoardCreator.classList.add('board-toggle');
-                dom.addNewPrivateBoardEventListener(document.querySelector("#newPrivateBoardBoard"));
+                publicBoardButton.classList.remove('hidden');
+                publicBoardButton.classList.add('board-toggle');
+                dom.addNewPrivateBoardEventListener(document.querySelector("#newPrivateBoard"));
                 dom.addEventListenerToCards();
                 dom.addEventListenerToBoardBins();
                 dom.newCardEventListener();
