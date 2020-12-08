@@ -16,6 +16,20 @@ def _get_data_from_tables(cursor: RealDictCursor, table):
 
 
 @database_connection.connection_handler
+def _get_public_boards(cursor: RealDictCursor):
+    cursor.execute("SELECT * FROM boards WHERE user_id IS NULL")
+    return cursor.fetchall()
+
+
+@database_connection.connection_handler
+def _get_private_boards(cursor: RealDictCursor, user_id):
+    query = "SELECT * FROM boards WHERE user_id = %(user_id)s OR user_id IS NULL"
+    params = {'user_id': user_id}
+    cursor.execute(query, params)
+    return cursor.fetchall()
+
+
+@database_connection.connection_handler
 def get_data_from_table(cursor: RealDictCursor, table, column):
     if column:
         cursor.execute(
@@ -48,6 +62,27 @@ def write_data_to_boards(cursor: RealDictCursor, title):
     params = {'title': title}
     cursor.execute(query, params)
     return cursor.fetchone()
+
+
+@database_connection.connection_handler
+def add_private_board(cursor: RealDictCursor, title, user_id):
+    query = """
+        INSERT INTO boards (title, user_id)
+        VALUES (%(title)s, %(user_id)s)
+        RETURNING id, title"""
+    params = {'title': title, 'user_id': user_id}
+    cursor.execute(query, params)
+    return cursor.fetchone()
+
+
+@database_connection.connection_handler
+def get_id_from_username(cursor: RealDictCursor, username):
+    query = """
+    SELECT id FROM users WHERE username = %(username)s
+    """
+    params = {'username': username}
+    cursor.execute(query, params)
+    return cursor.fetchone()['id']
 
 
 @database_connection.connection_handler
@@ -131,6 +166,15 @@ def _get_data(table, force):
     return _cache[table]
 
 
+def _get_board_data(force, user_id):
+    if force or "boards" not in _cache:
+        if user_id is None:
+            _cache["boards"] = _get_public_boards()
+        else:
+            _cache["boards"] = _get_private_boards(user_id)
+    return _cache["boards"]
+
+
 def clear_cache():
     for k in list(_cache.keys()):
         _cache.pop(k)
@@ -141,8 +185,8 @@ def get_statuses(force=False):
     return _get_data('statuses', force)
 
 
-def get_boards(force=False):
-    return _get_data('boards', force)
+def get_boards(force=False, user_id=None):
+    return _get_board_data(force, user_id)
 
 
 def get_cards(force=False):

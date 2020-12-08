@@ -52,8 +52,17 @@ export let dataHandler = {
             callback(response);
         });
     },
+    get_privateBoards: function (username, callback) {
+        this._api_post('/get-private-boards', username, (response) => {
+            this._data['boards'] = response;
+            callback(response);
+        })
+    },
     getBoard: function (boardId, callback) {
         // the board is retrieved and then the callback function is called with the board
+    },
+    clear_boards: function () {
+        this._data = {};
     },
     getStatusesToBoard: function (boardId, callback) {
         // the statuses are retrieved and then the callback function is called with the statuses
@@ -78,6 +87,12 @@ export let dataHandler = {
     createNewBoard: function (boardTitle, callback) {
         // creates new board, saves it and calls the callback function with its data
         this._api_post('/write-new-board', boardTitle, (response) => {
+            this._data['boards'] = response;
+            callback(response)
+        });
+    },
+    createNewPrivateBoard: function (privateBoardData, callback) {
+        this._api_post('/new-private-board', privateBoardData, (response) => {
             this._data['boards'] = response;
             callback(response)
         });

@@ -3,11 +3,11 @@ import {dataHandler} from "./data_handler.js";
 
 export let dom = {
     init: function () {
+        this.addNewBoardEventListener(document.querySelector("#newBoard"));
         if (sessionStorage.getItem('username')) {
             dom.user_in();
         } else {
             // This function should run once, when the page is loaded.
-            this.addNewBoardEventListener(document.querySelector("#newBoard"));
             this.addRegisterEventListeners();
         }
     },
@@ -107,6 +107,9 @@ export let dom = {
     addNewBoardEventListener: function (addNewBoarButton) {
         addNewBoarButton.addEventListener("click", this.createNewBoard);
     },
+    addNewPrivateBoardEventListener: function (privateBoardButton) {
+        privateBoardButton.addEventListener('click', this.createPrivateBoard);
+    },
     addRegisterEventListeners: function () {
         document.querySelector("#register").addEventListener("click", this.register);
         document.querySelector("#login").addEventListener("click", this.login);
@@ -167,32 +170,46 @@ export let dom = {
         let loginButton = document.querySelector("#login");
         let welcomeUser = document.querySelector("#hello");
         let registerButton = document.querySelector('#register');
+        let privateBoardCreator = document.querySelector('#newPrivateBoard');
+        privateBoardCreator.classList.remove('hidden');
+        privateBoardCreator.classList.add('board-toggle');
+        privateBoardCreator.addEventListener('click', dom.createPrivateBoard);
         registerButton.remove();
+        let username = sessionStorage.getItem('username');
         welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
+        welcomeUser.classList.remove('hidden');
         loginButton.removeEventListener('click', dom.login);
         loginButton.innerHTML = "Log out";
         loginButton.addEventListener('click', dom.logout);
+        dataHandler.get_privateBoards(username, function (boards) {
+            dom.showBoards(boards);
+        });
     },
     logout: function () {
         dataHandler._api_get('/logout', function (success) {
             sessionStorage.clear();
+            let privateBoardCreator = document.querySelector('#newPrivateBoard');
+            privateBoardCreator.classList.remove('board-toggle');
+            privateBoardCreator.classList.add('hidden');
             let logoutButton = document.querySelector('#login');
             logoutButton.removeEventListener('click', dom.logout);
             logoutButton.innerHTML = "Log in";
             logoutButton.addEventListener('click', dom.login);
-            document.querySelector('#hello').innerHTML = " ";
+            document.querySelector('#hello').classList.add('hidden');
             let registerButton = `<button id="register">Register</button>`
             let logo = document.querySelector('#logo');
             logo.insertAdjacentHTML("afterend", registerButton);
             document.querySelector('#register').addEventListener('click', dom.register);
+            dataHandler.clear_boards();
+            dom.loadBoards();
         })
     },
     createNewBoard: function (e) {
         let header = document.querySelector("#header");
-        if (e.target.localName === "button") {
-            e.target.remove();
-        } else {
-            e.target.parentNode.remove();
+        e.currentTarget.remove();
+        if (sessionStorage.getItem('username')) {
+            let privateBoardCreator = document.querySelector('#newPrivateBoard');
+            privateBoardCreator.classList.add('hidden');
         }
         let submit = `
         <div id="addNewBoard" class="board-toggle">
@@ -210,6 +227,10 @@ export let dom = {
                     <button id="newBoard" class="board-toggle data-toggle">Add Board  <i class="fas fa-plus"></i></button>
                 `;
                 header.insertAdjacentHTML("beforeend", addNewBoardButton);
+                if (sessionStorage.getItem('username')) {
+                    let privateBoardCreator = document.querySelector('#newPrivateBoard');
+                    privateBoardCreator.classList.remove('hidden');
+                }
                 dom.addNewBoardEventListener(document.querySelector("#newBoard"));
                 dom.addEventListenerToCards();
                 dom.addEventListenerToBoardBins();
@@ -217,6 +238,40 @@ export let dom = {
             })
         })
     },
+    createPrivateBoard: function (e) {
+        let header = document.querySelector("#header");
+        let publicBoardButton = document.querySelector('#newBoard');
+        e.currentTarget.classList.add('hidden');
+        publicBoardButton.classList.add('hidden');
+        let submit = `
+        <div id="addNewBoard" class="board-toggle">
+            <label for="title">Board title (private)</label>
+            <input type="text" id="title" name="title">
+            <button type="submit" id="newBoardSubmit">Save</button>
+        </div>
+        `;
+        header.insertAdjacentHTML('beforeend', submit);
+        document.querySelector('#newBoardSubmit').addEventListener('click', () => {
+            let privateBoardData = {
+                'username': sessionStorage.getItem('username'),
+                'title': document.querySelector('#title').value + ' (private)'}
+            dataHandler.createNewPrivateBoard(privateBoardData, (board) => {
+                dom.appendNewBoard(board);
+                document.querySelector("#addNewBoard").remove();
+                let privateBoardCreator = document.querySelector('#newPrivateBoard');
+                privateBoardCreator.classList.remove('hidden');
+                privateBoardCreator.classList.add('board-toggle');
+                publicBoardButton.classList.remove('hidden');
+                publicBoardButton.classList.add('board-toggle');
+                dom.addNewPrivateBoardEventListener(document.querySelector("#newPrivateBoard"));
+                dom.addEventListenerToCards();
+                dom.addEventListenerToBoardBins();
+                dom.newCardEventListener();
+            })
+        })
+
+    }
+    ,
     getNewTitle: function () {
         const title = document.querySelector('#title').value;
         return {title}
