@@ -47,6 +47,13 @@ def write_new_board():
     return data_handler.write_new_board(req['title'])
 
 
+@app.route('/new-private-board', methods=['POST'])
+@json_response
+def add_private_board():
+    new_board = request.get_json()
+    return data_handler.add_private_board(new_board['title'], new_board['username'])
+
+
 @app.route("/registration", methods=['POST'])
 @json_response
 def register_new_user():

@@ -39,6 +39,11 @@ def write_new_board(title):
     return persistence.write_data_to_boards(title)
 
 
+def add_private_board(title, username):
+    user_id = persistence.get_id_from_username(username)
+    return persistence.add_private_board(title, user_id)
+
+
 def register_new_user(data):
     username = data['username']
     password_hash = werkzeug.security.generate_password_hash(data['password'])

@@ -51,6 +51,27 @@ def write_data_to_boards(cursor: RealDictCursor, title):
 
 
 @database_connection.connection_handler
+def add_private_board(cursor: RealDictCursor, title, user_id):
+    query = """
+        INSERT INTO boards (title, user_id)
+        VALUES (%(title)s, %(user_id)s)
+        RETURNING id, title"""
+    params = {'title': title, 'user_id': user_id}
+    cursor.execute(query, params)
+    return cursor.fetchone()
+
+
+@database_connection.connection_handler
+def get_id_from_username(cursor: RealDictCursor, username):
+    query = """
+    SELECT id FROM users WHERE username = %(username)s
+    """
+    params = {'username': username}
+    cursor.execute(query, params)
+    return cursor.fetchone()['id']
+
+
+@database_connection.connection_handler
 def change_board_title(cursor: RealDictCursor, board_id, new_title):
     cursor.execute(
         sql.SQL("UPDATE boards SET title = {new_title} WHERE id = {id}").

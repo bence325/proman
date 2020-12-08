@@ -107,6 +107,9 @@ export let dom = {
     addNewBoardEventListener: function (addNewBoarButton) {
         addNewBoarButton.addEventListener("click", this.createNewBoard);
     },
+    addNewPrivateBoardEventListener: function (privateBoardButton) {
+        privateBoardButton.addEventListener('click', this.createPrivateBoard);
+    },
     addRegisterEventListeners: function () {
         document.querySelector("#register").addEventListener("click", this.register);
         document.querySelector("#login").addEventListener("click", this.login);
@@ -170,6 +173,7 @@ export let dom = {
         let privateBoardCreator = document.querySelector('#newPrivateBoard');
         privateBoardCreator.classList.remove('hidden');
         privateBoardCreator.classList.add('board-toggle');
+        privateBoardCreator.addEventListener('click', dom.createPrivateBoard);
         registerButton.remove();
         welcomeUser.innerHTML = `Welcome, ${sessionStorage.getItem('username')}!`;
         loginButton.removeEventListener('click', dom.login);
@@ -179,6 +183,9 @@ export let dom = {
     logout: function () {
         dataHandler._api_get('/logout', function (success) {
             sessionStorage.clear();
+            let privateBoardCreator = document.querySelector('#newPrivateBoard');
+            privateBoardCreator.classList.remove('board-toggle');
+            privateBoardCreator.classList.add('hidden');
             let logoutButton = document.querySelector('#login');
             logoutButton.removeEventListener('click', dom.logout);
             logoutButton.innerHTML = "Log in";
@@ -216,6 +223,37 @@ export let dom = {
             })
         })
     },
+    createPrivateBoard: function (e) {
+        let header = document.querySelector("#header");
+        e.currentTarget.classList.remove('board-toggle')
+        e.currentTarget.classList.add('hidden');
+        let submit = `
+        <div id="addNewBoard" class="board-toggle">
+            <label for="title">Board title (private)</label>
+            <input type="text" id="title" name="title">
+            <button type="submit" id="newBoardSubmit">Save</button>
+        </div>
+        `;
+        header.insertAdjacentHTML('beforeend', submit);
+        document.querySelector('#newBoardSubmit').addEventListener('click', () => {
+            let privateBoardData = {
+                'username': sessionStorage.getItem('username'),
+                'title': document.querySelector('#title').value}
+            dataHandler.createNewPrivateBoard(privateBoardData, (board) => {
+                dom.appendNewBoard(board);
+                document.querySelector("#addNewBoard").remove();
+                let privateBoardCreator = document.querySelector('#newPrivateBoard');
+                privateBoardCreator.classList.remove('hidden');
+                privateBoardCreator.classList.add('board-toggle');
+                dom.addNewPrivateBoardEventListener(document.querySelector("#newPrivateBoardBoard"));
+                dom.addEventListenerToCards();
+                dom.addEventListenerToBoardBins();
+                dom.newCardEventListener();
+            })
+        })
+
+    }
+    ,
     getNewTitle: function () {
         const title = document.querySelector('#title').value;
         return {title}

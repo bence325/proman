@@ -82,6 +82,12 @@ export let dataHandler = {
             callback(response)
         });
     },
+    createNewPrivateBoard: function (privateBoardData, callback) {
+        this._api_post('/new-private-board', privateBoardData, (response) => {
+            this._data['boards'] = response;
+            callback(response)
+        });
+    },
     createNewCard: function (cardData, boardId, callback) {
         this._api_post(`/add-new-card/${boardId}`, cardData, (response) => {
             callback(response);
