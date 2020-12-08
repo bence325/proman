@@ -90,6 +90,10 @@ section.board{
     flex: 1;
 }
 
+board-column-title {
+    float: right;
+}
+
 .board-column-content{
     min-height: 49px;
 }
@@ -104,6 +108,10 @@ section.board{
 
 .board-column-title{
     text-align: center;
+}
+
+#column-trash {
+    float: right;
 }
 
 .card{

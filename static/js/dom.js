@@ -87,7 +87,10 @@ export let dom = {
         for (let columnName of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
-                    <div class="board-column-title">${columnName}</div>
+                    <div class="board-column-title">
+                        ${columnName}
+                        <div id="column-trash" ><i class="fas fa-trash-alt board"></i></div>
+                    </div>
                     <div class="board-column-content" data-status="${columnName}"></div>
                 </div>
                 `;
@@ -269,9 +272,7 @@ export let dom = {
                 dom.newCardEventListener();
             })
         })
-
-    }
-    ,
+    },
     getNewTitle: function () {
         const title = document.querySelector('#title').value;
         return {title}
