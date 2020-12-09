@@ -128,3 +128,7 @@ def remove_card(card_id):
 
 def remove_board(board_id):
     persistence.remove_board(board_id)
+
+
+def remove_column(board_id, column_name):
+    persistence.remove_column(board_id, column_name)

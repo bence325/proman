@@ -87,7 +87,10 @@ export let dom = {
         for (let columnName of dataHandler._data['statuses']) {
             columnList += `
                 <div class="board-column">
-                    <div class="board-column-title">${columnName}</div>
+                    <div class="board-column-title">
+                        ${columnName}
+                        <div class="column-trash" data-column="${columnName}"><i class="fas fa-trash-alt board"></i></div>
+                    </div>
                     <div class="board-column-content" data-status="${columnName}"></div>
                 </div>
                 `;
@@ -99,6 +102,7 @@ export let dom = {
             `;
         boardBody.insertAdjacentHTML('beforeend', outHtml);
         dom.addEventListenerToContainer();
+        dom.addEventListenerToColumnBins();
         let columnTitles = document.querySelectorAll('.board-column-title');
         for (let columnTitle of columnTitles) {
             columnTitle.addEventListener("click", dom.changeColumnTitle);
@@ -269,9 +273,7 @@ export let dom = {
                 dom.newCardEventListener();
             })
         })
-
-    }
-    ,
+    },
     getNewTitle: function () {
         const title = document.querySelector('#title').value;
         return {title}
@@ -319,8 +321,12 @@ export let dom = {
         bins.forEach(bin => bin.addEventListener('click', dom.removeCard));
     },
     addEventListenerToBoardBins: function () {
-        let bins = document.querySelectorAll('#board-trash')
+        let bins = document.querySelectorAll('#board-trash');
         bins.forEach(bin => bin.addEventListener('click', dom.removeBoard))
+    },
+    addEventListenerToColumnBins: function () {
+        let bins = document.querySelectorAll('.column-trash');
+        bins.forEach(bin => bin.addEventListener('click', dom.removeColumn))
     },
     dragStartHandler: function (e) {
         let data = JSON.parse(this.dataset.json);
@@ -439,13 +445,16 @@ export let dom = {
                     if (document.querySelector(`#heading${columnData.board_id}`).nextElementSibling) {
                         let newColumn = `
                             <div class="board-column">
-                                <div class="board-column-title">${columnData.title}</div>
+                                <div class="board-column-title">${columnData.title}
+                                    <div class="column-trash" data-column="${columnData.title}"><i class="fas fa-trash-alt board"></i></div>
+                                </div>
                                 <div class="board-column-content" data-status="${columnData.title}"></div>
                             </div>
                             `;
                         let boardBody = document.querySelector(`#collapse${columnData.board_id}`)
                         boardBody.insertAdjacentHTML('beforeend', newColumn);
                         dom.addEventListenerToContainer();
+                        dom.addEventListenerToColumnBins();
                         document.querySelector(`[data-status="${columnData.title}"`).previousElementSibling.addEventListener("click", dom.changeColumnTitle);
                     }
                 }
@@ -590,6 +599,14 @@ export let dom = {
         let board = document.querySelector(`#board-${board_id}`);
         dataHandler.removeBoard(board_id, () => {
                 board.remove()
+        })
+    },
+    removeColumn: function () {
+        let columnName = this.dataset.column;
+        let boardId = this.closest('.board-columns').dataset.parent;
+        let column = this.closest('.board-column');
+        dataHandler.removeColumn(columnName, boardId, () => {
+            column.remove()
         })
     }
 };

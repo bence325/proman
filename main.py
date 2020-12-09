@@ -130,6 +130,12 @@ def remove_board(board_id):
     return data_handler.remove_board(board_id)
 
 
+@app.route('/remove-column/<int:board_id>/<column_name>', methods=['DELETE'])
+@json_response
+def remove_column(board_id, column_name):
+    return data_handler.remove_column(board_id, column_name)
+
+
 def main():
     app.run(debug=True)
 
