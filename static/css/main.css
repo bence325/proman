@@ -110,7 +110,7 @@ board-column-title {
     text-align: center;
 }
 
-#column-trash {
+.column-trash {
     float: right;
 }
 

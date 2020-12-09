@@ -272,3 +272,19 @@ def remove_board(cursor: RealDictCursor, board_id):
     cursor.execute(sql.SQL("""
         DELETE FROM cards WHERE board_id = {board_id}
         """).format(board_id=sql.Literal(board_id)))
+
+
+@database_connection.connection_handler
+def remove_column(cursor: RealDictCursor, board_id, column_name):
+    status_id = get_status_id(column_name)['id']
+    query = """
+        DELETE FROM cards 
+        WHERE board_id = %(board_id)s AND status_id = %(status_id)s
+        """
+    params = {'board_id': board_id, 'status_id': status_id}
+    cursor.execute(query, params)
+    update_query = """
+        UPDATE boards 
+        SET statuses = array_remove(statuses, %(status_id)s) 
+        WHERE id = %(board_id)s"""
+    cursor.execute(update_query, params)
