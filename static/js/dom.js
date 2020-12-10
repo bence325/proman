@@ -362,20 +362,11 @@ export let dom = {
     dropZoneDropHandler: function (e) {
         e.preventDefault();
         let dropZone;
-        let boardId = e.target.parentNode;
+        let boardId = e.target.closest('.board-columns');
         let draggedElement = document.querySelector('.dragged');
         let cardJsonData = JSON.parse(draggedElement.dataset.json)
-        if (e.target.classList.contains('active-zone')) {
-            dropZone = e.target.querySelector('.board-column-content')
-        } else if (e.target.classList.contains('board-column-content')) {
-            dropZone = e.target;
-            boardId = e.target.parentNode.parentNode
-        } else if (e.target.classList.contains('card')) {
-            dropZone = e.target.parentNode;
-            boardId = e.target.parentNode.parentNode.parentNode
-        } else if (e.target.classList.contains('card-title')) {
-            dropZone = e.target.parentNode.parentNode
-            boardId = e.target.parentNode.parentNode.parentNode.parentNode
+        if (e.target.closest('.board-column').classList.contains('active-zone')) {
+            dropZone = e.target.closest('.board-column').querySelector('.board-column-content');
         }
         if (parseInt(boardId.dataset.parent) === cardJsonData.board_id) {
             dropZone.appendChild(draggedElement)
