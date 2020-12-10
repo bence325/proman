@@ -88,7 +88,7 @@ export let dom = {
             columnList += `
                 <div class="board-column">
                     <div class="board-column-title">
-                        ${columnName}
+                        <div>${columnName}</div>
                         <div class="column-trash" data-column="${columnName}"><i class="fas fa-trash-alt board"></i></div>
                     </div>
                     <div class="board-column-content" data-status="${columnName}"></div>
@@ -105,7 +105,7 @@ export let dom = {
         dom.addEventListenerToColumnBins();
         let columnTitles = document.querySelectorAll('.board-column-title');
         for (let columnTitle of columnTitles) {
-            columnTitle.addEventListener("click", dom.changeColumnTitle);
+            columnTitle.children[0].addEventListener("click", dom.changeColumnTitle);
         }
     },
     addNewBoardEventListener: function (addNewBoarButton) {
@@ -506,12 +506,12 @@ export let dom = {
         newCardButtons.forEach(newButton => newButton.addEventListener('click', dom.addNewCard));
     },
     changeColumnTitle: function () {
-        let boardId = this.parentNode.parentNode.dataset.parent;
+        let boardId = this.closest('[data-parent]').dataset.parent;
         let oldTitle = this.innerHTML;
         let linput = `
                 <input type="text" id="title" name="title" class="submit-${boardId}" placeholder="${oldTitle}">
             `;
-        this.insertAdjacentHTML("afterend", linput);
+        this.insertAdjacentHTML("beforebegin", linput);
         this.remove();
         // not working yet....
         // document.querySelector(".board-header").addEventListener("click", () => {
