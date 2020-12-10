@@ -1,15 +1,21 @@
+drop table boards;
+
 create table boards
 (
-	id serial not null,
-	title varchar not null
+    id       serial  not null
+        constraint boards_pk
+            primary key,
+    title    varchar not null,
+    statuses integer[] default '{0,1,2,3}'::integer[],
+    user_id  integer
+        constraint boards_user_id_fkey
+            references users
 );
 
-create unique index boards_id_uindex
-	on boards (id);
-
 alter table boards
-	add constraint boards_pk
-		primary key (id);
+    owner to kisstamas86;
 
-INSERT INTO boards(id,title) VALUES (1,'Board 1');
-INSERT INTO boards(id,title) VALUES (2,'Board 2');
+create unique index boards_id_uindex
+    on boards (id);
+
+
