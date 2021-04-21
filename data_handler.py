@@ -3,20 +3,11 @@ import werkzeug.security
 
 
 def get_card_status(status_id):
-    """
-    Find the first status matching the given id
-    :param status_id:
-    :return: str
-    """
     statuses = persistence.get_statuses()
     return next((status['title'] for status in statuses if status['id'] == status_id), 'Unknown')
 
 
 def get_public_boards():
-    """
-    Gather all public boards
-    :return:
-    """
     return persistence.get_boards(force=True)
 
 
@@ -31,7 +22,7 @@ def get_cards_for_board(board_id):
     matching_cards = []
     for card in all_cards:
         if card['board_id'] == board_id:
-            card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
+            card['status_id'] = get_card_status(card['status_id'])
             matching_cards.append(card)
     return matching_cards
 
