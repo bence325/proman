@@ -35,6 +35,24 @@ export let dataHandler = {
             .then(response => callback(response))
     },
 
+    registration: function(registrationData, callback){
+        this._api_post('/registration', registrationData, function(confirmation){
+            callback(confirmation);
+        });
+    },
+
+    login: function(loginData, callback) {
+        this._api_post('/login', loginData, function (success) {
+            callback(success, loginData);
+        })
+    },
+
+    logout: function(callback){
+      this._api_get('/logout', function (){
+          callback();
+      });
+    },
+
     getBoards: function (callback) {
         this._api_get('/get-boards', (response) => {
             this._data['boards'] = response;
