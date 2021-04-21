@@ -3,8 +3,8 @@
 ## Overview
 
 
-A Trello like "one pager" web app where all
-the boards are displayed, and when one is opened then the corresponding cards are shown.
+A Trello like "one pager" web app where all the boards are displayed, 
+and when one is opened then the corresponding cards are shown.
 
 It is easy to use at first glance, functionality is straightforward.
 
@@ -14,6 +14,7 @@ It is easy to use at first glance, functionality is straightforward.
 - Create public boards
 - Rename board
 - Board view with 4 default columns
+- Create columns  
 - Rename columns
 - Create card
 - Order the cards
@@ -24,8 +25,7 @@ It is easy to use at first glance, functionality is straightforward.
 - User logout
 - Private boards
 - Delete public/private boards 
-- Delete cards
-
+- Delete cards, columns
 ---
 
 ## What we have learned during the project
