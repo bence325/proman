@@ -47,6 +47,12 @@ export let dataHandler = {
         })
     },
 
+    logout: function(callback){
+      this._api_get('/logout', function (){
+          callback();
+      });
+    },
+
     getBoards: function (callback) {
         this._api_get('/get-boards', (response) => {
             this._data['boards'] = response;

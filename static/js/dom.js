@@ -185,7 +185,7 @@ export let dom = {
         });
     },
     logout: function () {
-        dataHandler._api_get('/logout', function (success) {
+        dataHandler.logout(function () {
             sessionStorage.clear();
             let privateBoardCreator = document.querySelector('#newPrivateBoard');
             privateBoardCreator.classList.remove('board-toggle');
