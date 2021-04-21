@@ -35,6 +35,12 @@ export let dataHandler = {
             .then(response => callback(response))
     },
 
+    registration: function(registrationData, callback){
+        this._api_post('/registration', registrationData, function(confirmation){
+            callback(confirmation);
+        });
+    },
+
     login: function(loginData, callback) {
         this._api_post('/login', loginData, function (success) {
             if (success) {

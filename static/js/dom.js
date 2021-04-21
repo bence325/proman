@@ -123,9 +123,10 @@ export let dom = {
                 username: document.querySelector('#username').value,
                 password: document.querySelector('#password').value
             }
-            dataHandler._api_post('/registration', registrationData, function (confirmation) {
+            dataHandler.registration( registrationData, function (confirmation) {
                 document.querySelector("#new-user").innerHTML = ' ';
                 let feedback = `<p id="confirmation">${confirmation}</p>`;
+                let header = document.querySelector("#header");
                 header.insertAdjacentHTML('afterend', feedback);
                 setTimeout(() => document.querySelector("#confirmation").remove(), 5000);
             })
