@@ -43,16 +43,7 @@ export let dataHandler = {
 
     login: function(loginData, callback) {
         this._api_post('/login', loginData, function (success) {
-            if (success) {
-                sessionStorage.setItem('username', loginData.username);
-                document.querySelector("#log-user").innerHTML = ' ';
-                callback();
-            } else {
-                let loginForm = document.querySelector("#log-user");
-                let errorMessage = `<p id="error">Wrong username or password!</p>`;
-                loginForm.insertAdjacentHTML("beforeend", errorMessage);
-                setTimeout(() => document.querySelector("#error").remove(), 5000);
-            }
+            callback(success, loginData);
         })
     },
 

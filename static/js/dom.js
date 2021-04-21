@@ -147,8 +147,23 @@ export let dom = {
                 username: document.querySelector('#username').value,
                 password: document.querySelector('#password').value
             }
-            dataHandler.login(loginData, dom.user_in);
+            dataHandler.login(loginData, function(success) {dom.login_success(success, loginData)});
         })
+    },
+    login_success: function(success, loginData){
+        if (success) {
+                sessionStorage.setItem('username', loginData.username);
+                document.querySelector("#log-user").innerHTML = ' ';
+                dom.user_in();
+            } else {
+                dom.failed_login();
+            }
+    },
+    failed_login: function () {
+                let loginForm = document.querySelector("#log-user");
+                let errorMessage = `<p id="error">Wrong username or password!</p>`;
+                loginForm.insertAdjacentHTML("beforeend", errorMessage);
+                setTimeout(() => document.querySelector("#error").remove(), 5000);
     },
     user_in: function () {
         let loginButton = document.querySelector("#login");
