@@ -1,4 +1,3 @@
-// It uses data_handler.js to visualize elements
 import {dataHandler} from "./data_handler.js";
 
 export let dom = {
@@ -7,19 +6,15 @@ export let dom = {
         if (sessionStorage.getItem('username')) {
             dom.user_in();
         } else {
-            // This function should run once, when the page is loaded.
             this.addRegisterEventListeners();
         }
     },
     loadBoards: function () {
-        // retrieves boards and makes showBoards called
         dataHandler.getBoards(function (boards) {
             dom.showBoards(boards);
         });
     },
     showBoards: function (boards) {
-        // shows boards appending them to #boards div
-        // it adds necessary event listeners also
         let boardsContainer = document.querySelector('#boards');
         boardsContainer.innerHTML = "";
         let boardContainer = document.querySelector('#boards');
@@ -32,7 +27,6 @@ export let dom = {
         dom.addEventListenerToBoardBins();
     },
     loadCards: function () {
-        // retrieves cards and makes showCards called
         let boardBody = this.parentNode.parentNode;
         let boardHeader = boardBody.querySelector('.board-header')
         let boardId = boardBody.id.split("-")[1];
@@ -54,11 +48,8 @@ export let dom = {
             arrow.classList.remove("fa-chevron-up");
             arrow.classList.add("fa-chevron-down");
         }
-
     },
     showCards: function (board, cards) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
         for (let card of cards) {
             let jsonData = JSON.stringify(card)
             let column = board.querySelector(`[data-status="${card["status_id"]}"]`);
@@ -76,7 +67,6 @@ export let dom = {
         dom.addEventListenerToCards();
         dom.addEventListenerToBins();
     },
-    // here comes more features
     loadStatusesToBoard: function (boardBody, boardId) {
         dataHandler.getStatusesToBoard(boardId, function (statuses) {
             dom.addStatusColumns(boardBody, boardId);
@@ -156,18 +146,7 @@ export let dom = {
                 username: document.querySelector('#username').value,
                 password: document.querySelector('#password').value
             }
-            dataHandler._api_post('/login', loginData, function (success) {
-                if (success) {
-                    sessionStorage.setItem('username', loginData.username);
-                    document.querySelector("#log-user").innerHTML = ' ';
-                    dom.user_in();
-                } else {
-                    let loginForm = document.querySelector("#log-user");
-                    let errorMessage = `<p id="error">Wrong username or password!</p>`;
-                    loginForm.insertAdjacentHTML("beforeend", errorMessage);
-                    setTimeout(() => document.querySelector("#error").remove(), 5000);
-                }
-            })
+            dataHandler.login(loginData, dom.user_in);
         })
     },
     user_in: function () {
@@ -513,11 +492,6 @@ export let dom = {
             `;
         this.insertAdjacentHTML("beforebegin", linput);
         this.remove();
-        // not working yet....
-        // document.querySelector(".board-header").addEventListener("click", () => {
-        //     console.log('1')
-        //     dom.backOldTitle(boardId, oldTitle);
-        // })
         document.querySelector(`.submit-${boardId}`).addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 let newTitle = dom.getNewTitle();
@@ -546,7 +520,6 @@ export let dom = {
             if (e.keyCode === 27) {
                 dom.backOldTitle(boardId, oldTitle);
             }
-            // columnTitle.addEventListener("click", dom.changeColumnTitle)
         });
     },
     backOldTitle: function (boardId, oldTitle) {

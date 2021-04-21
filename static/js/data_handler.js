@@ -35,6 +35,21 @@ export let dataHandler = {
             .then(response => callback(response))
     },
 
+    login: function(loginData, callback) {
+        this._api_post('/login', loginData, function (success) {
+            if (success) {
+                sessionStorage.setItem('username', loginData.username);
+                document.querySelector("#log-user").innerHTML = ' ';
+                callback();
+            } else {
+                let loginForm = document.querySelector("#log-user");
+                let errorMessage = `<p id="error">Wrong username or password!</p>`;
+                loginForm.insertAdjacentHTML("beforeend", errorMessage);
+                setTimeout(() => document.querySelector("#error").remove(), 5000);
+            }
+        })
+    },
+
     getBoards: function (callback) {
         this._api_get('/get-boards', (response) => {
             this._data['boards'] = response;
