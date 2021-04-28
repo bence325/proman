@@ -26,3 +26,5 @@ INSERT INTO cards(id,board_id,title,status_id,order_cards) VALUES (9,2,'in progr
 INSERT INTO cards(id,board_id,title,status_id,order_cards) VALUES (10,2,'planning',2,0);
 INSERT INTO cards(id,board_id,title,status_id,order_cards) VALUES (11,2,'done card 1',3,0);
 INSERT INTO cards(id,board_id,title,status_id,order_cards) VALUES (12,2,'done card 1',3,1);
+
+ALTER SEQUENCE cards_id_seq RESTART WITH 13;

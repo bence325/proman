@@ -285,7 +285,7 @@ export let dom = {
                     <div id="board-trash" data-boardId="${board.id}"><i class="fas fa-trash-alt board"></i></div>
                 </button>
                 <button class="data-toggle board-toggle" data-boardContent="${board.id}" data-toggle="collapse" data-target="#collapse${board.id}" aria-expanded="true" aria-controls="collapse${board.id}">
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-ch evron-down"></i>
                 </button>
             </div>
             </section>

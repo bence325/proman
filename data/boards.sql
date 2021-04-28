@@ -19,3 +19,5 @@ create unique index boards_id_uindex
     on boards (id);
 
 
+ALTER SEQUENCE boards_id_seq RESTART WITH 2
+
