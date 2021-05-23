@@ -26,6 +26,20 @@ It is easy to use at first glance, functionality is straightforward.
 - Private boards
 - Delete public/private boards 
 - Delete cards, columns
+
+---
+## How to use
+
+- Prerequisites: PostgreSQL
+1. Create new database
+2. Run "users_table.sql"
+3. Run "statuses.sql"
+4. Run "cards.sql"
+5. Run "boards.sql"
+6. Run "user_to_boards.sql"
+7. Start main.py
+8. Visit localhost:5000 in your browser
+
 ---
 
 ## What we have learned during the project
