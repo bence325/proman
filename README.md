@@ -36,9 +36,8 @@ It is easy to use at first glance, functionality is straightforward.
 3. Run "statuses.sql"
 4. Run "cards.sql"
 5. Run "boards.sql"
-6. Run "user_to_boards.sql"
-7. Start main.py
-8. Visit localhost:5000 in your browser
+6. Start main.py
+7. Visit localhost:5000 in your browser
 
 ---
 
