@@ -16,3 +16,5 @@ INSERT INTO statuses(id,title) VALUES (1,'in progress');
 INSERT INTO statuses(id,title) VALUES (2,'testing');
 INSERT INTO statuses(id,title) VALUES (3,'done');
 
+ALTER SEQUENCE statuses_id_seq RESTART WITH 4;
+
