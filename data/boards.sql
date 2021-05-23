@@ -12,9 +12,6 @@ create table boards
             references users
 );
 
-alter table boards
-    owner to kisstamas86;
-
 create unique index boards_id_uindex
     on boards (id);
 
