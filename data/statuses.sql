@@ -1,3 +1,4 @@
+drop table if exists statuses;
 create table statuses
 (
 	id serial not null,

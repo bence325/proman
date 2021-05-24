@@ -29,3 +29,63 @@ INSERT INTO cards(id,board_id,title,status_id,order_cards) VALUES (11,2,'done ca
 INSERT INTO cards(id,board_id,title,status_id,order_cards) VALUES (12,2,'done card 1',3,1);
 
 ALTER SEQUENCE cards_id_seq RESTART WITH 13;
+
+
+drop table if exists statuses;
+create table statuses
+(
+	id serial not null,
+	title varchar
+);
+
+create unique index statuses_id_uindex
+	on statuses (id);
+
+alter table statuses
+	add constraint statuses_pk
+		primary key (id);
+
+INSERT INTO statuses(id,title) VALUES (0,'new');
+INSERT INTO statuses(id,title) VALUES (1,'in progress');
+INSERT INTO statuses(id,title) VALUES (2,'testing');
+INSERT INTO statuses(id,title) VALUES (3,'done');
+
+ALTER SEQUENCE statuses_id_seq RESTART WITH 4;
+
+drop table if exists users;
+create table users
+(
+	id serial not null,
+	username varchar not null,
+	password varchar not null
+);
+
+create unique index users_id_uindex
+	on users (id);
+
+create unique index users_username_uindex
+	on users (username);
+
+alter table users
+	add constraint users_pk
+		primary key (id);
+
+drop table if exists boards;
+
+create table boards
+(
+    id       serial  not null
+        constraint boards_pk
+            primary key,
+    title    varchar not null,
+    statuses integer[] default '{0,1,2,3}'::integer[],
+    user_id  integer
+        constraint boards_user_id_fkey
+            references users
+);
+
+create unique index boards_id_uindex
+    on boards (id);
+
+ALTER SEQUENCE boards_id_seq RESTART WITH 2
+

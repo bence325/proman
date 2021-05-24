@@ -32,12 +32,8 @@ It is easy to use at first glance, functionality is straightforward.
 
 - Prerequisites: PostgreSQL
 1. Create new database
-2. Run "users_table.sql"
-3. Run "statuses.sql"
-4. Run "cards.sql"
-5. Run "boards.sql"
-6. Start main.py
-7. Visit localhost:5000 in your browser
+2. Run "tables.sql"
+3. Visit localhost:5000 in your browser
 
 ---
 

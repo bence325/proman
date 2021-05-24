@@ -1,4 +1,4 @@
-drop table boards;
+drop table if exists boards;
 
 create table boards
 (
