@@ -30,10 +30,19 @@ It is easy to use at first glance, functionality is straightforward.
 ---
 ## How to use
 
+Without Dcoker
 - Prerequisites: PostgreSQL
+
 1. Create new database
 2. Run "tables.sql"
-3. Visit localhost:5000 in your browser
+3. Start flask application
+4. Visit localhost:5000 in your browser
+
+With Docker
+- Prerequisites: Docker, Docker compose
+
+1. Open terminal and run "docker-compose up"
+2. Visit localhost:5000 in your browser
 
 ---
 
