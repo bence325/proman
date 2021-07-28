@@ -128,6 +128,7 @@ def remove_column(board_id, column_name):
 
 def main():
     app.run(debug=True)
+    app.run(host='0.0.0.0')
 
     # Serving the favicon
     with app.app_context():
