@@ -1,0 +1,23 @@
+version: "3.3"
+   
+services:
+  db:
+    image: postgres
+    network_mode: host
+    volumes:
+      - ../proman_db:/var/lib/postgresql/data
+      - ./data/tables.sql:/docker-entrypoint.d/tables.sql
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    network_mode: host
+    # command: python3 main.py
+    volumes:
+      - .:/app
+    # ports:
+    #   - "8000:8000"
+    depends_on:
+      - db
